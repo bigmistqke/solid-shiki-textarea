@@ -1,9 +1,9 @@
+import { List } from '@solid-primitives/list'
 import { createDeepSignal } from '@solid-primitives/resource'
 import clsx from 'clsx'
 import { codeToHast, getHighlighter, type BundledTheme, type CodeOptionsSingleTheme } from 'shiki'
 import {
   ComponentProps,
-  For,
   Index,
   Show,
   createEffect,
@@ -16,7 +16,6 @@ import {
   type JSX,
 } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
-import { when } from './utils/conditionals'
 // @ts-expect-error
 import styles from './index.module.css'
 import { calculateContrastingColor } from './utils/calculate-contrasting-color'
@@ -75,7 +74,9 @@ export function ShikiTextarea(
   const maxCharCount = createMemo(() => calculateMaxCharCount(source()))
   const lineCount = createMemo(() => source().split('\n').length)
 
-  const startTransition = useTransition()[1]
+  const [pending, startTransition] = useTransition()
+
+  createEffect(() => console.log('transition is pending?', pending()))
 
   // Get styles from current theme
   const [themeStyles] = createResource(
@@ -107,9 +108,9 @@ export function ShikiTextarea(
       {...rest}
     >
       <div class={styles.container}>
-        <For each={source().split('\n')}>
-          {line => <Line source={line} lang={config.lang} theme={config.theme} />}
-        </For>
+        <List each={source().split('\n')}>
+          {line => <Line source={line()} lang={config.lang} theme={config.theme} />}
+        </List>
         <textarea
           inputmode="none"
           autocomplete="off"
@@ -135,14 +136,18 @@ function Line(props: { source: string; theme: Theme; lang: string }) {
   const [hast] = createResource(
     () => [props.source, props.theme, props.lang] as const,
     ([source, theme, lang]) =>
-      source ? codeToHast(source, { lang, theme }).then(({ children }) => children[0]) : undefined,
+      source
+        ? (codeToHast(source, { lang, theme }).then(
+            ({ children }) => children[0],
+          ) as unknown as Root)
+        : undefined,
     { storage: createDeepSignal },
   )
+  const memo = createMemo<Root | undefined>(previous => hast() || previous)
+
   return (
     <div class={styles.line}>
-      <Show when={when(hast, hast => 'children' in hast && hast.children)}>
-        {children => <Index each={children()}>{child => <HastNode node={child()} />}</Index>}
-      </Show>
+      <List each={memo()?.children}>{child => <HastNode node={child()} />}</List>
     </div>
   )
 }

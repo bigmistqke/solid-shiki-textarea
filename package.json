@@ -83,6 +83,7 @@
     "pnpm": ">=9.0.0"
   },
   "dependencies": {
+    "@solid-primitives/list": "^0.0.100",
     "@solid-primitives/resource": "^0.1.2",
     "clsx": "^2.1.1",
     "colord": "^2.9.3",

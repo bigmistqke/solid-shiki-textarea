@@ -10,6 +10,7 @@
 .editor .container {
   position: relative;
   flex: 1;
+  min-width: calc(var(--max-char-count) * var(--char-width) * 1px);
   min-height: calc(var(--line-count) * var(--char-height) * 1px);
 }
 
@@ -32,7 +33,6 @@
   border: none;
   background: transparent;
   padding: 0px;
-  min-width: calc(var(--max-char-count) * var(--char-width) * 1px);
   overflow: hidden;
   resize: none;
   color: transparent;

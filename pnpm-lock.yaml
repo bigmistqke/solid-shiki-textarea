@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@solid-primitives/list':
+        specifier: ^0.0.100
+        version: 0.0.100(solid-js@1.8.17)
       '@solid-primitives/resource':
         specifier: ^0.1.2
         version: 0.1.2(solid-js@1.8.17)
@@ -809,6 +812,11 @@ packages:
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
+
+  '@solid-primitives/list@0.0.100':
+    resolution: {integrity: sha512-SZsGouBzUkrZJlJkjVf1rDgRA6FD/+Qar3s7yD1h5uTe1ZIQM89D4RiGxnVjA+KUdfBFQtocT6J76eQ1aIbJxQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
 
   '@solid-primitives/resource@0.1.2':
     resolution: {integrity: sha512-jeXWy1khbrCMRja4yxXPwmUxRrRUrm/U47lRh2qO2jSkvVPg9Vyf0Dx3flGzykqnTFgJ5pPVjFlQmYvjtnj0Zw==}
@@ -2766,6 +2774,10 @@ snapshots:
   '@shikijs/core@1.6.2': {}
 
   '@sinclair/typebox@0.27.8': {}
+
+  '@solid-primitives/list@0.0.100(solid-js@1.8.17)':
+    dependencies:
+      solid-js: 1.8.17
 
   '@solid-primitives/resource@0.1.2(solid-js@1.8.17)':
     dependencies:
