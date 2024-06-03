@@ -160,16 +160,16 @@ function HastNode(props: { node: any }) {
 }
 
 function CharacterDimensions(props: { onResize: (dimension: Dimensions) => void }) {
-  let character: HTMLElement = null!
+  const [character, setCharacter] = createSignal<HTMLElement>(null!)
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
-      const { width, height } = character.getBoundingClientRect()
+      const { width, height } = character().getBoundingClientRect()
       props.onResize({ width, height })
     })
-    resizeObserver.observe(character)
+    resizeObserver.observe(character())
     onCleanup(() => resizeObserver.disconnect())
   })
 
-  return <code ref={character} class={styles.character} innerText="m" aria-hidden />
+  return <code ref={setCharacter} class={styles.character} innerText="m" aria-hidden />
 }
