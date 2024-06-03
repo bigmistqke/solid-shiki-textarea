@@ -1,11 +1,13 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --mono-font: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
   margin: 0;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: var(--mono-font);
 }
 
 .App {
@@ -27,12 +29,16 @@ main {
 
 header {
   display: flex;
-  align-items: center;
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  align-items: baseline;
   gap: 5px;
+  box-sizing: border-box;
   padding: 10px;
-
+  width: 100%;
   font-size: 10pt;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: var(--mono-font);
 
   & h1 {
     flex: 1;
@@ -40,12 +46,13 @@ header {
 
   & .inputs {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
+    font-family: var(--mono-font);
 
     & div {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 5px;
     }
 
@@ -56,7 +63,9 @@ header {
     & select {
       border-radius: 5px;
       background-color: transparent;
+      padding: 3px;
       color: white;
+      font-family: var(--mono-font);
     }
   }
 }
