@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
 import path from 'node:path'
+import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 
 export default defineConfig({
@@ -8,6 +8,7 @@ export default defineConfig({
       src: path.resolve(__dirname, '../src'),
     },
   },
+  base: './',
   plugins: [
     solidPlugin(),
     {
