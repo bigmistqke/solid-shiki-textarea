@@ -9,6 +9,7 @@ const App: Component = () => {
           class={styles.shikiTextarea}
           value="const sum = (a: string, b: string) => a + b"
           lang="tsx"
+          theme="min-dark"
         />
       </header>
     </div>

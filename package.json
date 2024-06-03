@@ -84,6 +84,8 @@
   "dependencies": {
     "@solid-primitives/resource": "^0.1.2",
     "clsx": "^2.1.1",
+    "colord": "^2.9.3",
+    "mix": "link:colord/plugins/mix",
     "shiki": "^1.6.2"
   }
 }

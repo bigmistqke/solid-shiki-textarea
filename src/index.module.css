@@ -1,12 +1,17 @@
 .editor {
   display: flex;
   position: relative;
+  background-color: var(--theme-background-color);
   overflow: auto;
+  caret-color: var(--theme-foreground-color);
   font-size: 10pt;
 }
 
-.editor code {
+.editor code:not(.character) {
   display: block;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
   font-family: monospace;
   white-space: pre;
 }
@@ -15,18 +20,25 @@
   text-align: inherit;
 }
 
+.editor code.character {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .container {
   position: relative;
   flex: 1;
 }
 
-.input {
+.textarea {
   position: absolute;
   top: 0px;
   right: 0px;
   bottom: 0px;
   left: 0px;
-  z-index: 1;
   outline: none;
   border: none;
   background: transparent;
@@ -36,12 +48,6 @@
   font-size: inherit;
   font-family: monospace;
 }
-.input::selection {
-  background: var(--selection-bg-color);
-}
-
-.character {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+.textarea::selection {
+  background: var(--theme-selection-color);
 }

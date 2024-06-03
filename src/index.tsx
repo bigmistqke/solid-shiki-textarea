@@ -1,11 +1,6 @@
 import { createDeepSignal } from '@solid-primitives/resource'
 import clsx from 'clsx'
-import {
-  bundledThemesInfo,
-  codeToHast,
-  type BundledTheme,
-  type CodeOptionsSingleTheme,
-} from 'shiki'
+import { codeToHast, getHighlighter, type BundledTheme, type CodeOptionsSingleTheme } from 'shiki'
 import {
   ComponentProps,
   Index,
@@ -23,6 +18,7 @@ import { Dynamic } from 'solid-js/web'
 import { when } from './utils/conditionals'
 // @ts-expect-error
 import styles from './index.module.css'
+import { calculateContrastingColor } from './utils/calculate-contrasting-color'
 import { processProps } from './utils/process-props'
 
 type Root = Awaited<ReturnType<typeof codeToHast>>
@@ -66,6 +62,7 @@ export function ShikiTextarea(
     'style',
     'theme',
   ])
+
   const startTransition = useTransition()[1]
 
   const [source, setSource] = createSignal(config.defaultValue || config.value)
@@ -76,25 +73,21 @@ export function ShikiTextarea(
   const [hast] = createResource(
     source,
     async source =>
-      (await codeToHast(source, { lang: config.lang || 'tsx', theme: config.theme || 'min-light' }))
-        .children[0],
+      (await codeToHast(source, { lang: config.lang || 'tsx', theme: config.theme })).children[0],
     { storage: createDeepSignal },
   )
+
   // Get styles from current theme
   const [themeStyles] = createResource(
-    () => config.theme as Theme,
-    () =>
-      bundledThemesInfo
-        .find(theme => theme.id === config.theme)
-        ?.import()
-        .then(module => {
-          const colors = module.default.colors
-          return {
-            background: colors?.['editor.background'],
-            'caret-color': colors?.['editor.foreground'],
-            '--selection-bg-color': colors?.['editor.selectionHighlightBackground'],
-          }
-        }),
+    () => [config.theme as Theme, config.lang] as const,
+    ([theme, lang]) =>
+      getHighlighter({ themes: [theme], langs: [lang] })
+        .then(highlighter => highlighter.getTheme(theme))
+        .then(theme => ({
+          '--theme-selection-color': calculateContrastingColor(theme.bg),
+          '--theme-background-color': theme.bg,
+          '--theme-foreground-color': theme.fg,
+        })),
   )
 
   // Sync local source signal with config.source
@@ -124,7 +117,7 @@ export function ShikiTextarea(
             {children => <Index each={children()}>{child => <HastNode node={child()} />}</Index>}
           </Show>
           <textarea
-            class={styles.input}
+            class={styles.textarea}
             onInput={onInput}
             spellcheck={false}
             style={{ 'min-width': lineSize() * characterWidth() + 'px' }}
