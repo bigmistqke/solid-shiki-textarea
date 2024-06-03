@@ -29,7 +29,7 @@ main {
 
 header {
   display: flex;
-  position: sticky;
+  position: absolute;
   top: 0px;
   left: 0px;
   align-items: baseline;
