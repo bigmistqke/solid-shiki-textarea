@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
+  min-height: 100vh;
+}
+
+.shikiTextarea {
+  padding: 5px;
+  text-align: left;
+}
