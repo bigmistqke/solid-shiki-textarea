@@ -11,7 +11,7 @@ export function calculateContrastingColor(hexColor: string): string {
   if (backgroundColor.isLight()) {
     selectionBackgroundColor = backgroundColor.darken(0.1)
   } else {
-    selectionBackgroundColor = backgroundColor.lighten(0.1)
+    selectionBackgroundColor = backgroundColor.lighten(0.15)
   }
 
   return selectionBackgroundColor.toRgbString()

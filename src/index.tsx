@@ -3,14 +3,15 @@ import clsx from 'clsx'
 import { codeToHast, getHighlighter, type BundledTheme, type CodeOptionsSingleTheme } from 'shiki'
 import {
   ComponentProps,
+  For,
   Index,
   Show,
-  Suspense,
   createEffect,
-  createRenderEffect,
+  createMemo,
   createResource,
   createSignal,
   onCleanup,
+  onMount,
   useTransition,
   type JSX,
 } from 'solid-js'
@@ -24,9 +25,13 @@ import { processProps } from './utils/process-props'
 type Root = Awaited<ReturnType<typeof codeToHast>>
 type Theme = CodeOptionsSingleTheme<BundledTheme>['theme']
 type HastNode = Root['children'][number]
+type Dimensions = {
+  width: number
+  height: number
+}
 
 /** Get the longest line-size of a given string */
-const getMaxLineSize = (source: string) => {
+const calculateMaxCharCount = (source: string) => {
   let maximumLineSize = -Infinity
   source.split('\n').forEach(line => {
     if (line.length > maximumLineSize) {
@@ -62,20 +67,15 @@ export function ShikiTextarea(
     'style',
     'theme',
   ])
+  const [source, setSource] = createSignal(config.defaultValue || config.value)
+  const [characterDimensions, setCharacterDimensions] = createSignal<Dimensions>({
+    width: 0,
+    height: 0,
+  })
+  const maxCharCount = createMemo(() => calculateMaxCharCount(source()))
+  const lineCount = createMemo(() => source().split('\n').length)
 
   const startTransition = useTransition()[1]
-
-  const [source, setSource] = createSignal(config.defaultValue || config.value)
-  const [characterWidth, setCharacterWidth] = createSignal<number>(0)
-  const [lineSize, setMaxLineSize] = createSignal(0)
-
-  // Transform source to hast (hypertext abstract syntax tree)
-  const [hast] = createResource(
-    source,
-    async source =>
-      (await codeToHast(source, { lang: config.lang || 'tsx', theme: config.theme })).children[0],
-    { storage: createDeepSignal },
-  )
 
   // Get styles from current theme
   const [themeStyles] = createResource(
@@ -93,54 +93,58 @@ export function ShikiTextarea(
   // Sync local source signal with config.source
   createEffect(() => setSource(config.value))
 
-  // Whenever source changes update the maximum linesize of source
-  createRenderEffect(() => setMaxLineSize(getMaxLineSize(source())))
-
-  const onInput = (e: { currentTarget: HTMLTextAreaElement }) => {
-    const value = e.currentTarget.value
-    // Update source with startTransition so Suspense is not triggered.
-    startTransition(() => {
-      setSource(value)
-      config.onInput?.(value)
-    })
-  }
-
   return (
-    <Suspense>
-      <div
-        class={clsx(styles.editor, config.class)}
-        style={{ ...themeStyles(), ...config.style }}
-        {...rest}
-      >
-        <div class={styles.container}>
-          <Show when={when(hast, hast => 'children' in hast && hast.children)}>
-            {children => <Index each={children()}>{child => <HastNode node={child()} />}</Index>}
-          </Show>
-          <textarea
-            class={styles.textarea}
-            onInput={onInput}
-            spellcheck={false}
-            style={{ 'min-width': lineSize() * characterWidth() + 'px' }}
-            value={config.value}
-          />
-          <Character onResize={setCharacterWidth} />
-        </div>
+    <div
+      class={clsx(styles.editor, config.class)}
+      style={{
+        ...themeStyles(),
+        ...config.style,
+        '--line-count': lineCount(),
+        '--max-char-count': maxCharCount(),
+        '--char-width': characterDimensions().width,
+        '--char-height': characterDimensions().height,
+      }}
+      {...rest}
+    >
+      <div class={styles.container}>
+        <For each={source().split('\n')}>
+          {line => <Line source={line} lang={config.lang} theme={config.theme} />}
+        </For>
+        <textarea
+          inputmode="none"
+          autocomplete="off"
+          spellcheck={false}
+          class={styles.textarea}
+          onInput={({ currentTarget: { value } }) => {
+            // Update source with startTransition so Suspense is not triggered.
+            startTransition(() => {
+              setSource(value)
+              config.onInput?.(value)
+            })
+          }}
+          value={config.value}
+        />
+        <CharacterDimensions onResize={setCharacterDimensions} />
       </div>
-    </Suspense>
+    </div>
   )
 }
 
-function Character(props: { onResize: (width: number) => void }) {
-  const character = (<code class={styles.character} innerText="m" />) as HTMLElement
-
-  const resizeObserver = new ResizeObserver(() => {
-    const { width } = character.getBoundingClientRect()
-    props.onResize(width)
-  })
-  resizeObserver.observe(character)
-  onCleanup(() => resizeObserver.disconnect())
-
-  return character
+function Line(props: { source: string; theme: Theme; lang: string }) {
+  // Transform source to hast (hypertext abstract syntax tree)
+  const [hast] = createResource(
+    () => [props.source, props.theme, props.lang] as const,
+    ([source, theme, lang]) =>
+      source ? codeToHast(source, { lang, theme }).then(({ children }) => children[0]) : undefined,
+    { storage: createDeepSignal },
+  )
+  return (
+    <div class={styles.line}>
+      <Show when={when(hast, hast => 'children' in hast && hast.children)}>
+        {children => <Index each={children()}>{child => <HastNode node={child()} />}</Index>}
+      </Show>
+    </div>
+  )
 }
 
 function HastNode(props: { node: any }) {
@@ -153,4 +157,19 @@ function HastNode(props: { node: any }) {
       )}
     </Show>
   )
+}
+
+function CharacterDimensions(props: { onResize: (dimension: Dimensions) => void }) {
+  let character: HTMLElement = null!
+
+  onMount(() => {
+    const resizeObserver = new ResizeObserver(() => {
+      const { width, height } = character.getBoundingClientRect()
+      props.onResize({ width, height })
+    })
+    resizeObserver.observe(character)
+    onCleanup(() => resizeObserver.disconnect())
+  })
+
+  return <code ref={character} class={styles.character} innerText="m" aria-hidden />
 }
