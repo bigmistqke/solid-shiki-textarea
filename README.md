@@ -6,7 +6,7 @@
 
 [![pnpm](https://img.shields.io/badge/maintained%20with-pnpm-cc00ff.svg?style=for-the-badge&logo=pnpm)](https://pnpm.io/)
 
-textarea with shiki syntax highlighting
+Textarea with syntax highlighting powered by [solid-js](https://github.com/solidjs/solid) and [shiki](https://github.com/shikijs/shiki).
 
 ## Quick start
 
@@ -34,3 +34,9 @@ export default () => (
   />
 )
 ```
+
+## Note
+
+It is implemented by having a textarea with transparent text laid over html generated with [shiki](https://github.com/shikijs/shiki). The generated html is diffed with solid's [reconcile](https://docs.solidjs.com/reference/store-utilities/reconcile) which offers a certain level of granularity, but it's not perfectly optimal.
+
+Currently does not provide a way to do wrapping: the textarea will overflow if it is wider then its container.
