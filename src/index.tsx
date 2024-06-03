@@ -74,9 +74,7 @@ export function ShikiTextarea(
   const maxCharCount = createMemo(() => calculateMaxCharCount(source()))
   const lineCount = createMemo(() => source().split('\n').length)
 
-  const [pending, startTransition] = useTransition()
-
-  createEffect(() => console.log('transition is pending?', pending()))
+  const [, startTransition] = useTransition()
 
   // Get styles from current theme
   const [themeStyles] = createResource(
@@ -136,18 +134,16 @@ function Line(props: { source: string; theme: Theme; lang: string }) {
   const [hast] = createResource(
     () => [props.source, props.theme, props.lang] as const,
     ([source, theme, lang]) =>
-      source
-        ? (codeToHast(source, { lang, theme }).then(
-            ({ children }) => children[0],
-          ) as unknown as Root)
-        : undefined,
+      (source
+        ? codeToHast(source, { lang, theme }).then(({ children }) => children[0])
+        : { children: undefined }) as unknown as Root,
     { storage: createDeepSignal },
   )
-  const memo = createMemo<Root | undefined>(previous => hast() || previous)
-
+  // Get the current or latest children
+  const hastNodes = () => (hast() || hast.latest)?.children
   return (
     <div class={styles.line}>
-      <List each={memo()?.children}>{child => <HastNode node={child()} />}</List>
+      <List each={hastNodes()}>{child => <HastNode node={child()} />}</List>
     </div>
   )
 }
