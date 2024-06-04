@@ -8,6 +8,8 @@
 
 Textarea with syntax highlighting powered by [solid-js](https://github.com/solidjs/solid) and [shiki](https://github.com/shikijs/shiki).
 
+https://github.com/bigmistqke/solid-shiki-textarea/assets/10504064/26e3218e-cfef-4a19-a145-b57b8e1988b9
+
 ## Quick start
 
 Install it:
