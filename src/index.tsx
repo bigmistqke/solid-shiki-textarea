@@ -42,7 +42,7 @@ const calculateMaxCharCount = (source: string) => {
 
 /** A textarea with syntax highlighting capabilities powered by [shiki](https://github.com/shikijs/shiki). */
 export function ShikiTextarea(
-  props: Omit<ComponentProps<'div'>, 'style'> & {
+  props: Omit<ComponentProps<'div'>, 'style' | 'onInput'> & {
     /** Custom CSS properties to apply to the editor. */
     style?: JSX.CSSProperties
     /** The source code to be displayed and edited. */
