@@ -11,7 +11,6 @@ import {
   createResource,
   createSignal,
   onCleanup,
-  onMount,
   useTransition,
   type JSX,
 } from 'solid-js'
@@ -19,6 +18,7 @@ import { Dynamic } from 'solid-js/web'
 // @ts-expect-error
 import styles from './index.module.css'
 import { calculateContrastingColor } from './utils/calculate-contrasting-color'
+import { whenever } from './utils/conditionals'
 import { processProps } from './utils/process-props'
 
 type Root = Awaited<ReturnType<typeof codeToHast>>
@@ -92,6 +92,20 @@ export function ShikiTextarea(
   // Sync local source signal with config.source
   createEffect(() => setSource(config.value))
 
+  // Transform source to hast (hypertext abstract syntax tree)
+  const [hast] = createResource(
+    () => [source(), config.theme, config.lang] as const,
+    ([source, theme, lang]) =>
+      (source
+        ? codeToHast(source, { lang, theme }).then(
+            ({ children }) => (children[0] as unknown as Root).children[0],
+          )
+        : { children: undefined }) as unknown as Root,
+    { storage: createDeepSignal },
+  )
+  // Get the current or latest children
+  const hastNodes = () => (hast() || hast.latest)?.children
+
   return (
     <div
       class={clsx(styles.editor, config.class)}
@@ -106,9 +120,9 @@ export function ShikiTextarea(
       {...rest}
     >
       <div class={styles.container}>
-        <List each={source().split('\n')}>
-          {line => <Line source={line()} lang={config.lang} theme={config.theme} />}
-        </List>
+        <code>
+          <List each={hastNodes()}>{line => <HastNode node={line()} />}</List>
+        </code>
         <textarea
           inputmode="none"
           autocomplete="off"
@@ -129,25 +143,6 @@ export function ShikiTextarea(
   )
 }
 
-function Line(props: { source: string; theme: Theme; lang: string }) {
-  // Transform source to hast (hypertext abstract syntax tree)
-  const [hast] = createResource(
-    () => [props.source, props.theme, props.lang] as const,
-    ([source, theme, lang]) =>
-      (source
-        ? codeToHast(source, { lang, theme }).then(({ children }) => children[0])
-        : { children: undefined }) as unknown as Root,
-    { storage: createDeepSignal },
-  )
-  // Get the current or latest children
-  const hastNodes = () => (hast() || hast.latest)?.children
-  return (
-    <div class={styles.line}>
-      <List each={hastNodes()}>{child => <HastNode node={child()} />}</List>
-    </div>
-  )
-}
-
 function HastNode(props: { node: any }) {
   return (
     <Show when={props.node.type !== 'text' && props.node} fallback={props.node.value}>
@@ -163,14 +158,16 @@ function HastNode(props: { node: any }) {
 function CharacterDimensions(props: { onResize: (dimension: Dimensions) => void }) {
   const [character, setCharacter] = createSignal<HTMLElement>(null!)
 
-  onMount(() => {
-    const resizeObserver = new ResizeObserver(() => {
-      const { width, height } = character().getBoundingClientRect()
-      props.onResize({ width, height })
-    })
-    resizeObserver.observe(character())
-    onCleanup(() => resizeObserver.disconnect())
-  })
+  createEffect(
+    whenever(character, character => {
+      const resizeObserver = new ResizeObserver(() => {
+        const { width, height } = character.getBoundingClientRect()
+        props.onResize({ width, height })
+      })
+      resizeObserver.observe(character)
+      onCleanup(() => resizeObserver.disconnect())
+    }),
+  )
 
   return <code ref={setCharacter} class={styles.character} innerText="m" aria-hidden />
 }
