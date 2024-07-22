@@ -15,24 +15,41 @@ https://github.com/bigmistqke/solid-shiki-textarea/assets/10504064/7bb4a2e1-a2c4
 Install it:
 
 ```bash
-npm i solid-shiki-textarea
+npm i shiki solid-shiki-textarea
 # or
-yarn add solid-shiki-textarea
+yarn add shiki solid-shiki-textarea
 # or
-pnpm add solid-shiki-textarea
+pnpm add shiki solid-shiki-textarea
 ```
 
 Use it:
 
 ```tsx
+// static import
+import { ShikiTextarea } from 'solid-shiki-textarea'
+import minLight from 'shiki/themes/min-light.mjs'
+import tsx from 'shiki/langs/tsx.mjs'
+
+export default () => (
+  <ShikiTextarea
+    lang={tsx}
+    theme={minLight}
+    value="const sum = (a: string, b: string) => a + b"
+    onInput={console.log}
+  />
+)
+```
+
+```tsx
+// dynamic import
 import { ShikiTextarea } from 'solid-shiki-textarea'
 
 export default () => (
   <ShikiTextarea
-    lang="tsx"
-    source="const sum = (a: string, b: string) => a + b"
-    theme="min-light"
-    onInput={source => console.log(source)}
+    lang={import('shiki/langs/tsx.mjs')}
+    theme={import('shiki/themes/min-light.mjs')}
+    value="const sum = (a: string, b: string) => a + b"
+    onInput={console.log}
   />
 )
 ```

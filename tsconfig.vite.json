@@ -13,10 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
+    "types": ["node"],
     "baseUrl": "."
   },
   "exclude": ["node_modules", "dist", "./dev"],
-  "include": ["./src/**/*"]
+  "include": ["./vite.config.ts"]
 }

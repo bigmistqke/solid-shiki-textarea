@@ -1,12 +1,15 @@
+import { BundledLanguage, BundledTheme, bundledLanguages, bundledThemes } from 'shiki'
 import { For, createSignal, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from '../src'
 import './index.css'
-import { Lang, Theme, langs, themes } from './shiki-data'
 
 const App: Component = () => {
-  const [currentTheme, setCurrentTheme] = createSignal<Theme>(themes[0])
-  const [currentLang, setCurrentLang] = createSignal<Lang>('tsx')
+  const [currentThemeName, setCurrentThemeName] = createSignal<BundledTheme>('aurora-x')
+  const [currentLanguageName, setCurrentLanguageName] = createSignal<BundledLanguage>('tsx')
+
+  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
+  const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
 
   return (
     <div class="App">
@@ -17,20 +20,22 @@ const App: Component = () => {
             <label for="theme">themes</label>
             <select
               id="theme"
-              value={currentTheme()}
-              onInput={e => setCurrentTheme(e.currentTarget.value as Theme)}
+              value={currentThemeName()}
+              onInput={e => setCurrentThemeName(e.currentTarget.value as BundledTheme)}
             >
-              <For each={themes}>{theme => <option>{theme}</option>}</For>
+              <For each={Object.keys(bundledThemes)}>{theme => <option>{theme}</option>}</For>
             </select>
           </div>
           <div>
             <label for="lang">languages</label>
             <select
               id="lang"
-              value={currentLang()}
-              onInput={e => setCurrentLang(e.currentTarget.value as Lang)}
+              value={currentLanguageName()}
+              onInput={e => setCurrentLanguageName(e.currentTarget.value as BundledLanguage)}
             >
-              <For each={langs}>{language => <option>{language}</option>}</For>
+              <For each={Object.keys(bundledLanguages)}>
+                {language => <option>{language}</option>}
+              </For>
             </select>
           </div>
         </div>
@@ -39,8 +44,9 @@ const App: Component = () => {
         <ShikiTextarea
           class="shikiTextarea"
           value="const sum = (a: string, b: string) => a + b"
-          lang={currentLang()}
-          theme={currentTheme()}
+          lang={language()}
+          theme={theme()}
+          initialColor="white"
         />
       </main>
     </div>

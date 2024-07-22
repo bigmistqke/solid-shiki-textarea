@@ -1,5 +1,5 @@
 .editor {
-  display: flex;
+  display: inline-block;
   position: relative;
   background-color: var(--theme-background-color);
   overflow: auto;
@@ -10,8 +10,6 @@
 .editor .container {
   position: relative;
   flex: 1;
-  min-width: calc(var(--max-char-count) * var(--char-width) * 1px);
-  min-height: calc(var(--line-count) * var(--char-height) * 1px);
 }
 
 .editor .container code:not(.character) {
@@ -23,7 +21,12 @@
   white-space: pre;
 }
 
+.editor .container pre {
+  margin: 0px;
+}
+
 .editor .container .textarea {
+  transition: color 0.5s;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -51,8 +54,4 @@
   left: 0px;
   opacity: 0;
   pointer-events: none;
-}
-
-.editor .container .line {
-  height: calc(var(--char-height) * 1px);
 }
