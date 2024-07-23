@@ -1,6 +1,6 @@
 {
   "name": "solid-shiki-textarea",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "textarea with shiki syntax highlighting",
   "license": "MIT",
   "author": "bigmistqke",

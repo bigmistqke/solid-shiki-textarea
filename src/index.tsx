@@ -196,22 +196,12 @@ export function ShikiTextarea(props: ShikiTextareaProps) {
     return hast.children[0]
   })
 
-  const themeStyles = whenever(theme, theme => {
-    try {
-      if (!theme.colors) {
-        throw 'no colors present in theme'
-      }
-      if (!theme.colors['editor.background']) {
-        throw 'no background color present'
-      }
-      return {
-        '--theme-selection-color': calculateContrastingColor(theme.colors['editor.background']),
-        '--theme-background-color': theme.colors['editor.background'],
-        '--theme-foreground-color': theme.colors.foreground,
-      }
-    } catch (err) {
-      console.error('error', err)
-      return undefined
+  const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
+    const { fg, bg } = highlighter.getTheme(theme)
+    return {
+      '--theme-selection-color': calculateContrastingColor(bg),
+      '--theme-background-color': bg,
+      '--theme-foreground-color': fg,
     }
   })
 

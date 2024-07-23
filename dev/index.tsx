@@ -46,7 +46,6 @@ const App: Component = () => {
           value="const sum = (a: string, b: string) => a + b"
           lang={language()}
           theme={theme()}
-          initialColor="white"
         />
       </main>
     </div>
