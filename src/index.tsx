@@ -249,7 +249,10 @@ export function ShikiTextarea(props: ShikiTextareaProps) {
           autocomplete="off"
           spellcheck={false}
           class={styles.textarea}
-          onInput={({ currentTarget: { value } }) => updateSource(value)}
+          onInput={({ currentTarget: { value } }) => {
+            updateSource(value)
+            config.onInput?.(value)
+          }}
           value={config.value}
         />
         <code
