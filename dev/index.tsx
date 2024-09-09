@@ -68,7 +68,6 @@ const App: Component = () => {
               theme={theme()}
               style={{
                 '--padding': '10px',
-                '--height': '100px',
               }}
               onInput={e => setValue(e.target.value)}
             />
@@ -78,7 +77,6 @@ const App: Component = () => {
             value={value()}
             style={{
               '--padding': '10px',
-              '--height': '100px',
             }}
             lang={currentLanguageName()}
             theme={currentThemeName()}
