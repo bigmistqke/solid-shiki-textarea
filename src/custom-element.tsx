@@ -38,6 +38,19 @@ declare global {
 
 /**********************************************************************************/
 /*                                                                                */
+/*                                     Set Cdn                                    */
+/*                                                                                */
+/**********************************************************************************/
+
+type Cdn = string | ((type: 'lang' | 'theme', id: string) => string)
+let CDN: Cdn = 'https://esm.sh'
+
+export function setCdn(cdn: Cdn) {
+  CDN = cdn
+}
+
+/**********************************************************************************/
+/*                                                                                */
 /*                                 Custom Element                                 */
 /*                                                                                */
 /**********************************************************************************/
@@ -47,24 +60,30 @@ const ShikiTextarea = createShikiTextarea(Object.fromEntries(classnames.map(name
 @element('shiki-textarea')
 class ShikiTextareaElement extends Element {
   @stringAttribute lang = 'tsx' as BundledLanguage
-  @stringAttribute cdn = 'esm.sh'
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
 
   template = () => {
     const [theme] = createResource(
       () => this.theme,
-      theme =>
-        import(/* @vite-ignore */ `https://${this.cdn}/shiki/themes/${theme}`).then(
-          module => module.default,
-        ),
+      async theme => {
+        const url =
+          typeof CDN === 'string' ? `${CDN}/tm-themes/themes/${theme}.json` : CDN('theme', theme)
+        return fetch(/* @vite-ignore */ url).then(result => result.json())
+      },
     )
     const [lang] = createResource(
       () => this.lang,
-      lang =>
-        import(/* @vite-ignore */ `https://${this.cdn}/shiki/langs/${lang}`).then(
-          module => module.default,
-        ),
+      async lang => {
+        const url =
+          typeof CDN === 'string' ? `${CDN}/tm-grammars/grammars/${lang}.json` : CDN('lang', lang)
+        if (typeof url === 'string') {
+          return fetch(/* @vite-ignore */ url)
+            .then(result => result.json())
+            .then(json => [json])
+        }
+        return url
+      },
     )
 
     return <ShikiTextarea lang={lang()} theme={theme()} value={this.value} />
@@ -73,11 +92,9 @@ class ShikiTextareaElement extends Element {
   static css = css
 }
 
-/**
- * NOOP to prevent <shiki-textarea/> to be treeshaken out.
- */
-export function registerShikiTextarea() {
-  if (!customElements.get('shiki-textarea')) {
-    customElements.define('shiki-textarea', ShikiTextareaElement)
-  }
+// NOTE:  <shiki-textarea/> is already defined with lume's @element() decorator.
+//        This line will always be NOOP, but is needed for rollup not to treeshake
+//        the custom-element declaration out of the bundle.
+if (!customElements.get('shiki-textarea')) {
+  customElements.define('shiki-textarea', ShikiTextareaElement)
 }

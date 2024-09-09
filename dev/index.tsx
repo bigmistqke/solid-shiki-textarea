@@ -2,10 +2,10 @@ import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from '
 import { createSignal, For, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
-import { registerShikiTextarea } from 'solid-shiki-textarea/custom-element'
+import { setCdn } from 'solid-shiki-textarea/custom-element'
 import './index.css'
 
-registerShikiTextarea()
+setCdn(`https://raw.githubusercontent.com/shikijs/textmate-grammars-themes/main/packages`)
 
 const App: Component = () => {
   const [value, setValue] = createSignal('const sum = (a: string, b: string) => a + b')
