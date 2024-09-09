@@ -10,9 +10,7 @@ Textarea with syntax highlighting powered by [solid-js](https://github.com/solid
 
 https://github.com/bigmistqke/solid-shiki-textarea/assets/10504064/7bb4a2e1-a2c4-460d-b782-fe9bf7cac43a
 
-## Quick start
-
-Install it:
+## Installation
 
 ```bash
 npm i shiki solid-shiki-textarea
@@ -22,10 +20,33 @@ yarn add shiki solid-shiki-textarea
 pnpm add shiki solid-shiki-textarea
 ```
 
-Use it:
+## Solid Component
+
+The main export of `solid-shiki-textarea` is a solid component.
+
+### Types
+
+```ts
+interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' | 'lang'> {
+  lang:
+    | Promise<LanguageRegistration[]>
+    | Promise<{ default: LanguageRegistration[] }>
+    | LanguageRegistration[]
+  style?: JSX.CSSProperties
+  theme:
+    | Promise<ThemeRegistrationRaw | ThemeRegistration>
+    | Promise<{ default: ThemeRegistrationRaw | ThemeRegistration }>
+    | ThemeRegistrationRaw
+    | ThemeRegistration
+  value: string
+}
+```
+
+### Usage
+
+**Static import of `theme/lang`**
 
 ```tsx
-// static import
 import { ShikiTextarea } from 'solid-shiki-textarea'
 import minLight from 'shiki/themes/min-light.mjs'
 import tsx from 'shiki/langs/tsx.mjs'
@@ -35,27 +56,80 @@ export default () => (
     lang={tsx}
     theme={minLight}
     value="const sum = (a: string, b: string) => a + b"
-    onInput={console.log}
+    onInput={e => console.log(e.target.value)}
   />
 )
 ```
 
+**Dynamic import of `theme/lang`**
+
 ```tsx
-// dynamic import
 import { ShikiTextarea } from 'solid-shiki-textarea'
 
 export default () => (
   <ShikiTextarea
-    lang={import('shiki/langs/tsx.mjs')}
-    theme={import('shiki/themes/min-light.mjs')}
+    lang={import('https://esm.sh/shiki/langs/tsx.mjs')}
+    theme={import('https://esm.sh/shiki/themes/min-light.mjs')}
     value="const sum = (a: string, b: string) => a + b"
-    onInput={console.log}
+    onInput={e => console.log(e.target.value)}
   />
 )
 ```
 
-## Note
+## Custom Element
 
-It is implemented by having a textarea with transparent text laid over html generated with [shiki](https://github.com/shikijs/shiki).
+We also export a custom-element wrapper `<shiki-textarea/>` powered by [@lume/element](https://github.com/lume/element)
 
-Currently does not provide a way to do wrapping: the textarea will overflow if it is wider then its container.
+### Types
+
+```tsx
+interface ShikiTextareaAttributes extends {
+  lang?: BundledLanguage
+  cdn?: string
+  theme?: BundledTheme
+  value?: string
+}
+```
+
+### Usage
+
+```tsx
+import { registerShikiTextarea } from 'solid-shiki-textarea/custom-element'
+
+// Noop to prevent <shiki-textarea/> from being treeshaken
+registerShikiTextarea()
+
+export default () => (
+  <shiki-textarea
+    lang="tsx"
+    theme="andromeeda"
+    value="const sum = (a: string, b: string) => a + b"
+    style={{
+      '--padding': '10px',
+      '--font-size': '16pt',
+    }}
+    onInput={e => console.log(e.target.value)}
+  />
+)
+```
+
+It resolves the theme and lang from a cdn, defaulted to `esm.sh`.
+
+**Note**
+
+> I have not yet found another cdn that can resolve shiki's `theme/lang` besides `esm.sh`. It also takes quite a bit before the `theme/lang` is resolved, so maybe there is a better solution _(PRs welcome!)_
+
+## CSS Variables
+
+The following css-variables are available:
+
+- `--padding`
+- `--padding-top`
+- `--padding-bottom`
+- `--padding-left`
+- `--padding-right`
+- `--width`
+- `--height`
+- `--font-size`
+
+For the solid-component, these can also be set directly from the component's `style`-prop.

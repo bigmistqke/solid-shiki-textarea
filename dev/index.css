@@ -60,7 +60,9 @@ header {
       font-size: 8pt;
     }
 
-    & select {
+    & select,
+    & button {
+      border: 1px solid white;
       border-radius: 5px;
       background-color: transparent;
       padding: 3px;

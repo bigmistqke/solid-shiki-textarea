@@ -1,7 +1,8 @@
 import path from 'path'
-import { defineConfig, normalizePath } from 'vite'
+import { defineConfig } from 'vite'
 import cssClassnames from 'vite-plugin-css-classnames'
 import dts from 'vite-plugin-dts'
+// import dtsBundleGenerator from 'vite-plugin-dts-bundle-generator'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import solid from 'vite-plugin-solid'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -20,18 +21,18 @@ export default defineConfig({
   ],
   server: { port: 3000 },
   build: {
+    emptyOutDir: false,
     lib: {
-      entry: normalizePath(path.resolve(__dirname, 'src/index.tsx')),
+      entry: {
+        'custom-element': path.resolve(__dirname, 'src/custom-element.tsx'),
+      },
       name: 'solid-shiki-textarea',
-      fileName: `index`,
+      fileName: (format, entryName) => `${entryName}.js`,
       formats: ['es'],
     },
-    minify: false,
     rollupOptions: {
-      external: ['solid-js', 'solid-js/web', 'shiki', 'shiki/wasm'],
       output: {
         globals: {
-          'solid-js': 'SolidJS',
           shiki: 'Shiki',
         },
       },

@@ -1,18 +1,25 @@
 .editor {
   display: inline-block;
   position: relative;
-  background-color: var(--theme-background-color);
+  background-color: var(--background-color);
+  padding: var(--padding);
+  padding-top: var(--padding-top, var(--padding));
+  padding-right: var(--padding-right, var(--padding));
+  padding-bottom: var(--padding-bottom, var(--padding));
+  padding-left: var(--padding-left, var(--padding));
+  width: var(--width);
+  height: var(--height);
   overflow: auto;
-  caret-color: var(--theme-foreground-color);
-  font-size: 10pt;
+  caret-color: var(--foreground-color);
+  font-size: var(--font-size, 10pt);
 }
 
-.editor .container {
+.container {
   position: relative;
   flex: 1;
 }
 
-.editor .container code:not(.character) {
+.container code:not(.character) {
   display: block;
   position: relative;
   z-index: 1;
@@ -21,17 +28,17 @@
   white-space: pre;
 }
 
-.editor .container pre {
+.container pre {
   margin: 0px;
 }
 
-.editor .container .textarea {
-  transition: color 0.5s;
+.container .textarea {
   position: absolute;
   top: 0px;
   right: 0px;
   bottom: 0px;
   left: 0px;
+  transition: color 0.5s;
   outline: none;
   border: none;
   background: transparent;
@@ -44,11 +51,11 @@
   text-align: inherit;
 }
 
-.editor .container .textarea::selection {
-  background: var(--theme-selection-color);
+.container .textarea::selection {
+  background: var(--selection-color);
 }
 
-.editor .container code.character {
+.container code.character {
   position: absolute;
   top: 0px;
   left: 0px;

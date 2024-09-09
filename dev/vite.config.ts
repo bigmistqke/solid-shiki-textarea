@@ -1,16 +1,22 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
+import cssModuleClassnames from 'vite-plugin-css-classnames'
 import solidPlugin from 'vite-plugin-solid'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   resolve: {
     alias: {
-      src: path.resolve(__dirname, '../src'),
+      'solid-shiki-textarea': path.resolve(__dirname, '../src'),
     },
   },
   base: './',
   plugins: [
-    solidPlugin(),
+    cssModuleClassnames(),
+    tsconfigPaths(),
+    solidPlugin({
+      babel: { plugins: [['@babel/plugin-proposal-decorators', { version: '2023-05' }]] },
+    }),
     {
       name: 'Reaplace env variables',
       transform(code, id) {
