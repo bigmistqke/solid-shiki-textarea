@@ -1,0 +1,83 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --mono-font: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
+  margin: 0;
+}
+
+code {
+  font-family: var(--mono-font);
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  background-color: #282c34;
+  min-height: 100vh;
+  color: white;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+header {
+  display: flex;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  align-items: baseline;
+  gap: 5px;
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  font-size: 10pt;
+  font-family: var(--mono-font);
+
+  & h1 {
+    flex: 1;
+  }
+
+  & .inputs {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono-font);
+
+    & div {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+
+    & label {
+      font-size: 8pt;
+    }
+
+    & select,
+    & button {
+      border: 1px solid white;
+      border-radius: 5px;
+      background-color: transparent;
+      padding: 3px;
+      color: white;
+      font-family: var(--mono-font);
+    }
+  }
+}
+
+.shikiTextarea {
+  margin: 15px;
+  padding: 5px;
+  text-align: left;
+}
+
+h1 {
+  all: unset;
+}
