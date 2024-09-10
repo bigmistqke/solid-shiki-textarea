@@ -56,6 +56,10 @@ export default () => (
     lang={tsx}
     theme={minLight}
     value="const sum = (a: string, b: string) => a + b"
+    style={{
+      padding: '10px',
+      'font-size': '16pt',
+    }}
     onInput={e => console.log(e.target.value)}
   />
 )
@@ -71,6 +75,10 @@ export default () => (
     lang={import('https://esm.sh/shiki/langs/tsx.mjs')}
     theme={import('https://esm.sh/shiki/themes/min-light.mjs')}
     value="const sum = (a: string, b: string) => a + b"
+    style={{
+      padding: '10px',
+      'font-size': '16pt',
+    }}
     onInput={e => console.log(e.target.value)}
   />
 )
@@ -94,10 +102,12 @@ interface ShikiTextareaAttributes extends {
 ### Usage
 
 ```tsx
-import { registerShikiTextarea } from 'solid-shiki-textarea/custom-element'
+import { setCDN } from 'solid-shiki-textarea/custom-element'
 
-// Noop to prevent <shiki-textarea/> from being treeshaken
-registerShikiTextarea()
+// Set base-url of CDN directly (defaults to https://esm.sh)
+setCDN('https://unpkg.com')
+// Or use the callback-form
+setCDN((type, id) => `./shiki/${type}/${id}.json`)
 
 export default () => (
   <shiki-textarea
@@ -106,18 +116,12 @@ export default () => (
     value="const sum = (a: string, b: string) => a + b"
     style={{
       '--padding': '10px',
-      '--font-size': '16pt',
+      'font-size': '16pt',
     }}
     onInput={e => console.log(e.target.value)}
   />
 )
 ```
-
-It resolves the theme and lang from a cdn, defaulted to `esm.sh`.
-
-**Note**
-
-> I have not yet found another cdn that can resolve shiki's `theme/lang` besides `esm.sh`. It also takes quite a bit before the `theme/lang` is resolved, so maybe there is a better solution _(PRs welcome!)_
 
 ## CSS Variables
 
@@ -130,6 +134,11 @@ The following css-variables are available:
 - `--padding-right`
 - `--width`
 - `--height`
-- `--font-size`
 
-For the solid-component, these can also be set directly from the component's `style`-prop.
+For the solid-component, these can also be set directly from the component's `style`-prop:
+
+```tsx
+<ShikiTextarea style={{padding: '10px'}}>
+// instead of
+<ShikiTextarea style={{'--padding': '10px'}}>
+```

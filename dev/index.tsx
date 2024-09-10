@@ -1,28 +1,36 @@
 import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
-import { createSignal, For, Show, type Component } from 'solid-js'
+import { createSignal, For, Index, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
-import { setCdn } from 'solid-shiki-textarea/custom-element'
+import { setCDN } from 'solid-shiki-textarea/custom-element'
 import './index.css'
 
-setCdn(`https://raw.githubusercontent.com/shikijs/textmate-grammars-themes/main/packages`)
+setCDN(`https://raw.githubusercontent.com/shikijs/textmate-grammars-themes/main/packages`)
 
 const App: Component = () => {
   const [value, setValue] = createSignal('const sum = (a: string, b: string) => a + b')
+
+  // Config
   const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>(
     'custom-element',
   )
   const [currentThemeName, setCurrentThemeName] = createSignal<BundledTheme>('aurora-x')
   const [currentLanguageName, setCurrentLanguageName] = createSignal<BundledLanguage>('tsx')
 
-  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
+  const [fontSize, setFontSize] = createSignal(10)
+  const [padding, setPadding] = createSignal(5)
+  const [amount, setAmount] = createSignal(1)
+  const [editable, setEditable] = createSignal(true)
+
+  // Derived imports
   const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
+  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
 
   return (
-    <div class="App">
-      <header>
+    <div class="app">
+      <div class="side-panel">
         <h1>Solid Shiki Textarea</h1>
-        <div class="inputs">
+        <footer>
           <div>
             <label for="mode">mode</label>
             <button
@@ -34,6 +42,7 @@ const App: Component = () => {
               {componentType()}
             </button>
           </div>
+          <br />
           <div>
             <label for="theme">themes</label>
             <select
@@ -56,33 +65,81 @@ const App: Component = () => {
               </For>
             </select>
           </div>
-        </div>
-      </header>
-      <main>
-        <Show
-          when={componentType() === 'custom-element'}
-          fallback={
-            <ShikiTextarea
-              value={value()}
-              lang={language()}
-              theme={theme()}
-              style={{
-                '--padding': '10px',
-              }}
-              onInput={e => setValue(e.target.value)}
+          <br />
+          <div>
+            <label for="padding">padding</label>
+            <input
+              id="padding"
+              type="number"
+              onInput={e => setPadding(+e.currentTarget.value)}
+              value={padding()}
             />
-          }
-        >
-          <shiki-textarea
-            value={value()}
-            style={{
-              '--padding': '10px',
-            }}
-            lang={currentLanguageName()}
-            theme={currentThemeName()}
-            onInput={e => setValue(e.target.value)}
-          />
-        </Show>
+          </div>
+          <div>
+            <label for="font-size">font-size</label>
+            <input
+              id="font-size"
+              type="number"
+              onInput={e => setFontSize(+e.currentTarget.value)}
+              value={fontSize()}
+            />
+          </div>
+          <div>
+            <label for="amount">amount</label>
+            <input
+              id="amount"
+              type="number"
+              onInput={e => setAmount(+e.currentTarget.value)}
+              value={amount()}
+            />
+          </div>
+          <div>
+            <label for="editable">editable</label>
+            <button
+              id="editable"
+              onClick={e => {
+                setEditable(editable => !editable)
+              }}
+            >
+              {editable() ? 'enabled' : 'disabled'}
+            </button>
+          </div>
+        </footer>
+      </div>
+
+      <main>
+        <Index each={Array.from({ length: amount() }).fill('')}>
+          {() => (
+            <Show
+              when={componentType() === 'custom-element'}
+              fallback={
+                <ShikiTextarea
+                  editable={editable()}
+                  value={value()}
+                  lang={language()}
+                  theme={theme()}
+                  style={{
+                    'font-size': `${fontSize()}pt`,
+                    '--padding': `${padding()}px`,
+                  }}
+                  onInput={e => setValue(e.target.value)}
+                />
+              }
+            >
+              <shiki-textarea
+                editable={editable()}
+                value={value()}
+                style={{
+                  'font-size': `${fontSize()}pt`,
+                  '--padding': `${padding()}px`,
+                }}
+                lang={currentLanguageName()}
+                theme={currentThemeName()}
+                onInput={e => setValue(e.target.value)}
+              />
+            </Show>
+          )}
+        </Index>
       </main>
     </div>
   )

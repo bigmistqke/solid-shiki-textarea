@@ -15,7 +15,7 @@
   height: var(--height);
   overflow: auto;
   caret-color: var(--foreground-color);
-  font-size: var(--font-size, 10pt);
+  font-size: inherit;
 }
 
 .container {
@@ -37,8 +37,8 @@
 }
 
 code {
-  line-height: inherit;
   font-size: inherit;
+  line-height: inherit;
 }
 .container .textarea {
   position: absolute;
@@ -54,10 +54,10 @@ code {
   overflow: hidden;
   resize: none;
   color: transparent;
-  font-family: monospace;
-  text-align: inherit;
   font-size: inherit;
   line-height: inherit;
+  font-family: monospace;
+  text-align: inherit;
 }
 
 .container .textarea::selection {
@@ -70,4 +70,5 @@ code {
   left: 0px;
   opacity: 0;
   pointer-events: none;
+  font-size: inherit;
 }

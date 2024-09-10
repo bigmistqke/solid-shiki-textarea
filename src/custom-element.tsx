@@ -1,9 +1,21 @@
-import { element, Element, ElementAttributes, stringAttribute } from '@lume/element'
-import { BundledLanguage, BundledTheme } from 'shiki/types.mjs'
-import { createResource } from 'solid-js'
+import {
+  booleanAttribute,
+  element,
+  Element,
+  ElementAttributes,
+  stringAttribute,
+} from '@lume/element'
+import {
+  BundledLanguage,
+  BundledTheme,
+  LanguageRegistration,
+  ThemeRegistration,
+} from 'shiki/types.mjs'
+import { createResource, onCleanup } from 'solid-js'
 import { createShikiTextarea } from './core'
 import classnames from './index.module.css?classnames'
 import css from './index.module.css?raw'
+import { Cache } from './utils/cache'
 import { sheet } from './utils/sheet.js'
 
 /**********************************************************************************/
@@ -14,7 +26,7 @@ import { sheet } from './utils/sheet.js'
 
 interface ShikiTextareaAttributes
   extends Omit<
-    ElementAttributes<ShikiTextareaElement, 'cdn' | 'lang' | 'theme' | 'value'>,
+    ElementAttributes<ShikiTextareaElement, 'lang' | 'theme' | 'value' | 'editable'>,
     'onInput' | 'oninput'
   > {
   oninput?: (event: InputEvent & { target: HTMLTextAreaElement }) => any
@@ -46,7 +58,20 @@ declare global {
 type Cdn = string | ((type: 'lang' | 'theme', id: string) => string)
 let CDN: Cdn = 'https://esm.sh'
 
-export function setCdn(cdn: Cdn) {
+/**
+ * Sets the CDN from which the theme/lang of <shiki-textarea/> is fetched.
+ *
+ * Accepts as arguments
+ * - url: string
+ * - callback: (type: 'lang' | 'theme', id: string) => string
+ *
+ * When given an url, this will be used to fetch
+ * - `${cdn}/tm-themes/themes/${theme}.json` for the `themes`
+ * - `${cdn}/tm-grammars/grammars/${grammar}.json` for the `langs`
+ *
+ * When given a callback, the returned string will be used to fetch.
+ */
+export function setCDN(cdn: Cdn) {
   CDN = cdn
 }
 
@@ -58,6 +83,9 @@ export function setCdn(cdn: Cdn) {
 
 const ShikiTextarea = createShikiTextarea(Object.fromEntries(classnames.map(name => [name, name])))
 
+const THEME_CACHE = new Cache<Promise<ThemeRegistration>>()
+const LANG_CACHE = new Cache<Promise<LanguageRegistration>>()
+
 const ShikiTextareaStyleSheet = sheet(css)
 
 @element('shiki-textarea')
@@ -66,9 +94,10 @@ class ShikiTextareaElement extends Element {
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
   @stringAttribute stylesheet = ''
+  @booleanAttribute editable = true
 
   template = () => {
-    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets
+    const adoptedStyleSheets = this.shadowRoot!.adoptedStyleSheets
 
     adoptedStyleSheets.push(ShikiTextareaStyleSheet)
 
@@ -81,7 +110,12 @@ class ShikiTextareaElement extends Element {
       async theme => {
         const url =
           typeof CDN === 'string' ? `${CDN}/tm-themes/themes/${theme}.json` : CDN('theme', theme)
-        return fetch(/* @vite-ignore */ url).then(result => result.json())
+        onCleanup(() => THEME_CACHE.cleanup(url))
+        return THEME_CACHE.add(url, () =>
+          fetch(/* @vite-ignore */ url)
+            .then(result => result.json())
+            .catch(console.error),
+        )
       },
     )
     const [lang] = createResource(
@@ -89,16 +123,24 @@ class ShikiTextareaElement extends Element {
       async lang => {
         const url =
           typeof CDN === 'string' ? `${CDN}/tm-grammars/grammars/${lang}.json` : CDN('lang', lang)
-        if (typeof url === 'string') {
-          return fetch(/* @vite-ignore */ url)
+        onCleanup(() => LANG_CACHE.cleanup(url))
+        return LANG_CACHE.add(url, () =>
+          fetch(/* @vite-ignore */ url)
             .then(result => result.json())
-            .then(json => [json])
-        }
-        return url
+            .then(result => [result] as any)
+            .catch(console.error),
+        )
       },
     )
 
-    return <ShikiTextarea lang={lang()} theme={theme()} value={this.value} />
+    return (
+      <ShikiTextarea
+        lang={lang() as any}
+        theme={theme() as any}
+        value={this.value}
+        editable={this.editable}
+      />
+    )
   }
 }
 

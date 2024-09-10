@@ -1,7 +1,6 @@
 import { List } from '@solid-primitives/list'
 import clsx from 'clsx'
 import {
-  HighlighterCore,
   LanguageRegistration,
   ThemeRegistration,
   ThemeRegistrationRaw,
@@ -52,47 +51,15 @@ async function resolve<T extends Record<string, any>>(
 
 /**********************************************************************************/
 /*                                                                                */
-/*                                      Cache                                     */
-/*                                                                                */
-/**********************************************************************************/
-
-const loadWasm = import('shiki/wasm')
-
-const CACHE = new WeakMap<
-  ThemeRegistrationRaw | ThemeRegistration,
-  WeakMap<LanguageRegistration[], Promise<HighlighterCore>>
->()
-function getCachedHighlighter([theme, lang]: [
-  theme: ThemeRegistrationRaw | ThemeRegistration,
-  lang: LanguageRegistration[],
-]) {
-  let highlighters = CACHE.get(theme)
-  if (!highlighters) {
-    CACHE.set(theme, new WeakMap())
-    highlighters = CACHE.get(theme)!
-  }
-  let highlighter = highlighters.get(lang)
-  if (!highlighter) {
-    highlighter = getHighlighterCore({
-      themes: [theme],
-      langs: [lang],
-      loadWasm,
-    })
-    highlighters.set(lang, highlighter)
-  }
-  return highlighter
-}
-
-/**********************************************************************************/
-/*                                                                                */
 /*                                 Shiki Textarea                                 */
 /*                                                                                */
 /**********************************************************************************/
-
 export interface ShikiTextareaProps
   extends Omit<ComponentProps<'div'>, 'style' | 'onInput' | 'lang'> {
   /** The default source code to initialize the editor with. */
   defaultValue?: string
+  /** If textarea is editable or not. */
+  editable?: boolean
   /**
    * The programming language of the source code for syntax highlighting.
    *
@@ -136,6 +103,14 @@ export interface ShikiTextareaProps
   onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
 }
 
+const LOADED_LANGS = new WeakMap<ShikiTextareaProps['lang'], Promise<any>>()
+const LOADED_THEMES = new WeakMap<ShikiTextareaProps['theme'], Promise<any>>()
+const HIGHLIGHTER = getHighlighterCore({
+  themes: [],
+  langs: [],
+  loadWasm: import('shiki/wasm'),
+})
+
 export function createShikiTextarea(styles: Record<string, string>) {
   return function ShikiTextarea(props: ShikiTextareaProps) {
     const [config, rest] = splitProps(props, [
@@ -146,6 +121,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
       'value',
       'style',
       'theme',
+      'editable',
     ])
     const [source, setSource] = createSignal(config.defaultValue || config.value)
     const [characterDimensions, setCharacterDimensions] = createSignal<Dimensions>({
@@ -155,7 +131,21 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     const [theme] = createResource(() => config.theme, resolve)
     const [lang] = createResource(() => config.lang, resolve)
-    const [highlighter] = createResource(every(theme, lang), getCachedHighlighter)
+    const [highlighter] = createResource(every(theme, lang), async ([theme, lang]) => {
+      const highlighter = await HIGHLIGHTER
+
+      if (!LOADED_LANGS.has(lang)) {
+        LOADED_LANGS.set(lang, highlighter.loadLanguage(lang))
+      }
+      await LOADED_LANGS.get(lang)
+
+      if (!LOADED_THEMES.has(theme)) {
+        LOADED_THEMES.set(theme, highlighter.loadTheme(theme))
+      }
+      await LOADED_THEMES.get(theme)
+
+      return highlighter
+    })
 
     const hast = createMemo<RootContent | undefined>(previous => {
       const _highlighter = highlighter()
@@ -216,6 +206,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
             autocomplete="off"
             spellcheck={false}
             class={styles.textarea}
+            disabled={!config.editable}
             onInput={e => {
               const value = e.currentTarget.value
               updateSource(value)
