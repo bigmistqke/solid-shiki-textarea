@@ -21,19 +21,20 @@
 .container {
   position: relative;
   flex: 1;
-}
 
-.container code:not(.character) {
-  display: block;
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-  font-family: monospace;
-  white-space: pre;
-}
+  & code:not(.character) {
+    display: block;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+    font-family: monospace;
+    white-space: pre;
+  }
 
-.container pre {
-  margin: 0px;
+  & pre {
+    margin: 0px;
+    background: transparent !important;
+  }
 }
 
 code {

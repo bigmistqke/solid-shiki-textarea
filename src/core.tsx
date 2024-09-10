@@ -1,40 +1,29 @@
-import { List } from '@solid-primitives/list'
 import clsx from 'clsx'
 import {
   LanguageRegistration,
   ThemeRegistration,
   ThemeRegistrationRaw,
-  codeToHast,
   getHighlighterCore,
 } from 'shiki'
 import {
   ComponentProps,
-  Index,
-  Show,
-  Suspense,
-  createEffect,
-  createMemo,
+  createRenderEffect,
   createResource,
   createSignal,
   onCleanup,
   splitProps,
-  untrack,
-  useTransition,
   type JSX,
 } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
 import { calculateContrastingColor } from './utils/calculate-contrasting-color'
-import { every, when, whenever } from './utils/conditionals'
+import { every, whenever } from './utils/conditionals'
 import { getLineCount } from './utils/get-line-count'
 import { getLineSize } from './utils/get-line-size'
 
-type Root = Awaited<ReturnType<typeof codeToHast>>
-type RootContent = Root['children'][0]
-type HastNode = Root['children'][number]
-type Dimensions = {
-  width: number
-  height: number
-}
+/**********************************************************************************/
+/*                                                                                */
+/*                                      Utils                                     */
+/*                                                                                */
+/**********************************************************************************/
 
 async function resolve<T extends Record<string, any>>(
   value: T | Promise<T> | Promise<{ default: T }>,
@@ -56,8 +45,6 @@ async function resolve<T extends Record<string, any>>(
 /**********************************************************************************/
 export interface ShikiTextareaProps
   extends Omit<ComponentProps<'div'>, 'style' | 'onInput' | 'lang'> {
-  /** The default source code to initialize the editor with. */
-  defaultValue?: string
   /** If textarea is editable or not. */
   editable?: boolean
   /**
@@ -115,7 +102,6 @@ export function createShikiTextarea(styles: Record<string, string>) {
   return function ShikiTextarea(props: ShikiTextareaProps) {
     const [config, rest] = splitProps(props, [
       'class',
-      'defaultValue',
       'lang',
       'onInput',
       'value',
@@ -123,8 +109,11 @@ export function createShikiTextarea(styles: Record<string, string>) {
       'theme',
       'editable',
     ])
-    const [source, setSource] = createSignal(config.defaultValue || config.value)
-    const [characterDimensions, setCharacterDimensions] = createSignal<Dimensions>({
+    const [source, setSource] = createSignal(config.value)
+    const [characterDimensions, setCharacterDimensions] = createSignal<{
+      width: number
+      height: number
+    }>({
       width: 0,
       height: 0,
     })
@@ -147,20 +136,16 @@ export function createShikiTextarea(styles: Record<string, string>) {
       return highlighter
     })
 
-    const hast = createMemo<RootContent | undefined>(previous => {
-      const _highlighter = highlighter()
-      const _lang = untrack(lang)?.[0]
-      const _theme = untrack(theme)
-      if (!_highlighter || !_lang || !_theme) return previous
-      const _source = source()
-      if (!source) return undefined
-      const hast = _highlighter.codeToHast(_source, {
-        lang: _lang.name,
-        theme: _theme,
-      })
-      if (!hast.children[0]) return previous
-      return hast.children[0]
-    })
+    let previous: string | undefined = undefined
+    const html = whenever(
+      every(lang, theme, highlighter, source),
+      ([[lang], theme, highlighter, source]) => {
+        return (previous = highlighter.codeToHtml(source, {
+          lang: lang!.name,
+          theme: theme,
+        }))
+      },
+    )
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
       const { fg, bg } = highlighter.getTheme(theme)
@@ -171,13 +156,9 @@ export function createShikiTextarea(styles: Record<string, string>) {
       }
     })
 
-    const [, startTransition] = useTransition()
-    function updateSource(source: string) {
-      startTransition(() => setSource(source))
-    }
-
-    // Sync local source signal with config.source
-    createEffect(() => updateSource(config.value))
+    // NOTE:  Update to projection once this lands in solid 2.0
+    //        Sync local source signal with config.source
+    createRenderEffect(() => setSource(config.value))
 
     return (
       <div
@@ -196,11 +177,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
             'min-height': `${Math.ceil(getLineCount(source()) * characterDimensions().height)}px`,
           }}
         >
-          <Suspense>
-            <List each={when(hast, hast => 'children' in hast && hast.children)}>
-              {line => <HastNode node={line()} />}
-            </List>
-          </Suspense>
+          <code class={styles.code} innerHTML={html() || previous} />
           <textarea
             inputmode="none"
             autocomplete="off"
@@ -209,7 +186,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
             disabled={!config.editable}
             onInput={e => {
               const value = e.currentTarget.value
-              updateSource(value)
+              setSource(value)
               config.onInput?.(e)
             }}
             value={config.value}
@@ -230,16 +207,4 @@ export function createShikiTextarea(styles: Record<string, string>) {
       </div>
     )
   }
-}
-
-function HastNode(props: { node: any }) {
-  return (
-    <Show when={props.node.type !== 'text' && props.node} fallback={props.node.value}>
-      {node => (
-        <Dynamic component={node().tagName || 'div'} {...node().properties}>
-          <Index each={node().children}>{child => <HastNode node={child()} />}</Index>
-        </Dynamic>
-      )}
-    </Show>
-  )
 }

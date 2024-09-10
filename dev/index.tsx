@@ -1,19 +1,19 @@
+import self from '.?raw'
 import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
 import { createSignal, For, Index, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
-import { setCDN } from 'solid-shiki-textarea/custom-element'
 import './index.css'
 
-setCDN(`https://raw.githubusercontent.com/shikijs/textmate-grammars-themes/main/packages`)
-
 const App: Component = () => {
-  const [value, setValue] = createSignal('const sum = (a: string, b: string) => a + b')
+  const [value, setValue] = createSignal(
+    Array.from({ length: 10 })
+      .map(() => self)
+      .join('\n'),
+  )
 
   // Config
-  const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>(
-    'custom-element',
-  )
+  const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>('solid')
   const [currentThemeName, setCurrentThemeName] = createSignal<BundledTheme>('aurora-x')
   const [currentLanguageName, setCurrentLanguageName] = createSignal<BundledLanguage>('tsx')
 
