@@ -53,11 +53,17 @@ class ShikiTextareaElement extends Element {
   @stringAttribute cdn = 'esm.sh'
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
+  @stringAttribute stylesheet = ''
 
   template = () => {
     const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets
 
     adoptedStyleSheets.push(ShikiTextareaStyleSheet)
+
+    if (this.stylesheet) {
+      adoptedStyleSheets.push(sheet(this.stylesheet))
+    }
+
     const [theme] = createResource(
       () => this.theme,
       theme =>
