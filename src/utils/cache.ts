@@ -20,12 +20,13 @@ export class Cache<T> {
   }
 
   cleanup(key: string) {
-    if (!(key in this.#registry)) {
+    const node = this.#registry[key]
+    if (!node) {
       console.warn(`Disposing unavailable key from cache: ${key}.`)
       return
     }
-    this.#registry[key].count--
-    if (this.#registry[key].count < 0) {
+    node.count--
+    if (node.count < 0) {
       delete this.#registry[key]
       DEBUG && console.info(`Deleted ${key} from registry`, this.#registry)
     }

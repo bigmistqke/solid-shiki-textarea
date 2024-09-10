@@ -134,7 +134,12 @@ class ShikiTextareaElement extends Element {
     )
 
     return (
-      <ShikiTextarea lang={lang()} theme={theme()} value={this.value} editable={this.editable} />
+      <ShikiTextarea
+        lang={lang() as any}
+        theme={theme() as any}
+        value={this.value}
+        editable={this.editable}
+      />
     )
   }
 }

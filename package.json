@@ -42,6 +42,7 @@
     "build:dev": "vite build dev",
     "preview:dev": "vite preview dev",
     "prepublishOnly": "pnpm build",
+    "types": "tsc",
     "format": "prettier --ignore-path .gitignore -w \"src/**/*.{js,ts,json,css,tsx,jsx}\" \"dev/**/*.{js,ts,json,css,tsx,jsx}\"",
     "lint": "concurrently pnpm:lint:*",
     "lint:code": "eslint --ignore-path .gitignore --max-warnings 0 src/**/*.{js,ts,tsx,jsx}",
@@ -49,7 +50,7 @@
     "update-deps": "pnpm up -Li"
   },
   "dependencies": {
-    "@lume/element": "^0.11.9",
+    "@lume/element": "^0.12.0",
     "@solid-primitives/list": "^0.0.100",
     "clsx": "^2.1.1"
   },
