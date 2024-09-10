@@ -7,7 +7,6 @@ export class Cache<T> {
 
   add(key: string, callback: Accessor<T>) {
     let cached = this.#registry[key]
-    console.log('cached', cached)
     if (cached) {
       cached.count++
       return cached.value

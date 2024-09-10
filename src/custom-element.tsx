@@ -105,7 +105,9 @@ class ShikiTextareaElement extends Element {
           typeof CDN === 'string' ? `${CDN}/tm-themes/themes/${theme}.json` : CDN('theme', theme)
         onCleanup(() => THEME_CACHE.cleanup(url))
         return THEME_CACHE.add(url, () =>
-          fetch(/* @vite-ignore */ url).then(result => result.json()),
+          fetch(/* @vite-ignore */ url)
+            .then(result => result.json())
+            .catch(console.error),
         )
       },
     )
@@ -118,7 +120,8 @@ class ShikiTextareaElement extends Element {
         return LANG_CACHE.add(url, () =>
           fetch(/* @vite-ignore */ url)
             .then(result => result.json())
-            .then(result => [result] as any),
+            .then(result => [result] as any)
+            .catch(console.error),
         )
       },
     )

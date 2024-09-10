@@ -11,77 +11,89 @@ code {
   font-family: var(--mono-font);
 }
 
-.App {
+.app {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: var(--background-color);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   color: white;
+}
+
+.side-panel {
+  display: flex;
+  flex: 0 250px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+
+  & * {
+    font-family: var(--mono-font);
+  }
+}
+
+h1 {
+  margin: 0px;
+  font-size: 12pt;
+}
+
+footer {
+  display: flex;
+  bottom: 0px;
+  left: 0px;
+  flex-direction: column;
+  align-self: flex-end;
+  gap: 5px;
+  z-index: 5;
+  box-sizing: border-box;
+  font-size: 10pt;
+  font-family: var(--mono-font);
+
+  & > div {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    gap: 5px;
+
+    & > label {
+      flex: 1;
+    }
+    & > :not(label) {
+      flex: 1.5;
+    }
+  }
+}
+
+select,
+button,
+input {
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: transparent;
+  background-color: var(--background-color);
+  padding: 3px;
+  min-width: 0px;
+  color: white;
+  font-family: var(--mono-font);
 }
 
 main {
   display: flex;
+  position: relative;
   flex: 1;
   flex-direction: column;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 5px;
-  overflow: hidden;
-}
-
-header {
-  display: flex;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  align-items: baseline;
-  gap: 5px;
-  z-index: 5;
+  gap: 15px 30px;
   box-sizing: border-box;
-  padding: 10px;
-  width: 100%;
-  font-size: 10pt;
-  font-family: var(--mono-font);
-
-  & h1 {
-    flex: 1;
-  }
-
-  & .inputs {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    font-family: var(--mono-font);
-
-    & div {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-    }
-
-    & label {
-      font-size: 8pt;
-    }
-
-    & select,
-    & button {
-      border: 1px solid white;
-      border-radius: 5px;
-      background-color: transparent;
-      background-color: var(--background-color);
-      padding: 3px;
-      color: white;
-      font-family: var(--mono-font);
-    }
-  }
+  padding: 15px;
+  height: 100vh;
+  overflow: scroll;
 }
 
 .shikiTextarea {
   margin: 15px;
   padding: 5px;
   text-align: left;
-}
-
-h1 {
-  all: unset;
 }

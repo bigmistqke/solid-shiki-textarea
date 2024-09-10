@@ -1,5 +1,5 @@
 import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
-import { createSignal, For, Show, type Component } from 'solid-js'
+import { createSignal, For, Index, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
 import { setCDN } from 'solid-shiki-textarea/custom-element'
@@ -18,11 +18,15 @@ const App: Component = () => {
   const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
   const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
 
+  const [fontSize, setFontSize] = createSignal(10)
+  const [padding, setPadding] = createSignal(5)
+  const [amount, setAmount] = createSignal(1)
+
   return (
-    <div class="App">
-      <header>
+    <div class="app">
+      <div class="side-panel">
         <h1>Solid Shiki Textarea</h1>
-        <div class="inputs">
+        <footer>
           <div>
             <label for="mode">mode</label>
             <button
@@ -34,6 +38,7 @@ const App: Component = () => {
               {componentType()}
             </button>
           </div>
+          <br />
           <div>
             <label for="theme">themes</label>
             <select
@@ -56,10 +61,39 @@ const App: Component = () => {
               </For>
             </select>
           </div>
-        </div>
-      </header>
+          <br />
+          <div>
+            <label for="padding">padding</label>
+            <input
+              id="padding"
+              type="number"
+              onInput={e => setPadding(+e.currentTarget.value)}
+              value={padding()}
+            />
+          </div>
+          <div>
+            <label for="font-size">font-size</label>
+            <input
+              id="font-size"
+              type="number"
+              onInput={e => setFontSize(+e.currentTarget.value)}
+              value={fontSize()}
+            />
+          </div>
+          <div>
+            <label for="amount">amount</label>
+            <input
+              id="amount"
+              type="number"
+              onInput={e => setAmount(+e.currentTarget.value)}
+              value={amount()}
+            />
+          </div>
+        </footer>
+      </div>
+
       <main>
-        <For each={Array.from({ length: 40 }).fill('')}>
+        <Index each={Array.from({ length: amount() }).fill('')}>
           {() => (
             <Show
               when={componentType() === 'custom-element'}
@@ -69,8 +103,8 @@ const App: Component = () => {
                   lang={language()}
                   theme={theme()}
                   style={{
-                    'font-size': '16pt',
-                    '--padding': '10px',
+                    'font-size': `${fontSize()}pt`,
+                    '--padding': `${padding()}px`,
                   }}
                   onInput={e => setValue(e.target.value)}
                 />
@@ -79,7 +113,8 @@ const App: Component = () => {
               <shiki-textarea
                 value={value()}
                 style={{
-                  '--padding': '10px',
+                  'font-size': `${fontSize()}pt`,
+                  '--padding': `${padding()}px`,
                 }}
                 lang={currentLanguageName()}
                 theme={currentThemeName()}
@@ -87,7 +122,7 @@ const App: Component = () => {
               />
             </Show>
           )}
-        </For>
+        </Index>
       </main>
     </div>
   )
