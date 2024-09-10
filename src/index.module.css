@@ -36,6 +36,10 @@
   margin: 0px;
 }
 
+code {
+  line-height: inherit;
+  font-size: inherit;
+}
 .container .textarea {
   position: absolute;
   top: 0px;
@@ -50,9 +54,10 @@
   overflow: hidden;
   resize: none;
   color: transparent;
-  font-size: inherit;
   font-family: monospace;
   text-align: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .container .textarea::selection {
