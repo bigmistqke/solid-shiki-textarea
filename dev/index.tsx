@@ -59,30 +59,34 @@ const App: Component = () => {
         </div>
       </header>
       <main>
-        <Show
-          when={componentType() === 'custom-element'}
-          fallback={
-            <ShikiTextarea
-              value={value()}
-              lang={language()}
-              theme={theme()}
-              style={{
-                '--padding': '10px',
-              }}
-              onInput={e => setValue(e.target.value)}
-            />
-          }
-        >
-          <shiki-textarea
-            value={value()}
-            style={{
-              '--padding': '10px',
-            }}
-            lang={currentLanguageName()}
-            theme={currentThemeName()}
-            onInput={e => setValue(e.target.value)}
-          />
-        </Show>
+        <For each={Array.from({ length: 40 }).fill('')}>
+          {() => (
+            <Show
+              when={componentType() === 'custom-element'}
+              fallback={
+                <ShikiTextarea
+                  value={value()}
+                  lang={language()}
+                  theme={theme()}
+                  style={{
+                    '--padding': '10px',
+                  }}
+                  onInput={e => setValue(e.target.value)}
+                />
+              }
+            >
+              <shiki-textarea
+                value={value()}
+                style={{
+                  '--padding': '10px',
+                }}
+                lang={currentLanguageName()}
+                theme={currentThemeName()}
+                onInput={e => setValue(e.target.value)}
+              />
+            </Show>
+          )}
+        </For>
       </main>
     </div>
   )

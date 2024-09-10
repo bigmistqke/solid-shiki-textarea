@@ -1,9 +1,15 @@
 import { element, Element, ElementAttributes, stringAttribute } from '@lume/element'
-import { BundledLanguage, BundledTheme } from 'shiki/types.mjs'
-import { createResource } from 'solid-js'
+import {
+  BundledLanguage,
+  BundledTheme,
+  LanguageRegistration,
+  ThemeRegistration,
+} from 'shiki/types.mjs'
+import { createResource, onCleanup } from 'solid-js'
 import { createShikiTextarea } from './core'
 import classnames from './index.module.css?classnames'
 import css from './index.module.css?raw'
+import { Cache } from './utils/cache'
 
 /**********************************************************************************/
 /*                                                                                */
@@ -13,7 +19,7 @@ import css from './index.module.css?raw'
 
 interface ShikiTextareaAttributes
   extends Omit<
-    ElementAttributes<ShikiTextareaElement, 'cdn' | 'lang' | 'theme' | 'value'>,
+    ElementAttributes<ShikiTextareaElement, 'lang' | 'theme' | 'value'>,
     'onInput' | 'oninput'
   > {
   oninput?: (event: InputEvent & { target: HTMLTextAreaElement }) => any
@@ -57,6 +63,9 @@ export function setCdn(cdn: Cdn) {
 
 const ShikiTextarea = createShikiTextarea(Object.fromEntries(classnames.map(name => [name, name])))
 
+const THEME_CACHE = new Cache<Promise<ThemeRegistration>>()
+const LANG_CACHE = new Cache<Promise<LanguageRegistration>>()
+
 @element('shiki-textarea')
 class ShikiTextareaElement extends Element {
   @stringAttribute lang = 'tsx' as BundledLanguage
@@ -69,7 +78,10 @@ class ShikiTextareaElement extends Element {
       async theme => {
         const url =
           typeof CDN === 'string' ? `${CDN}/tm-themes/themes/${theme}.json` : CDN('theme', theme)
-        return fetch(/* @vite-ignore */ url).then(result => result.json())
+        onCleanup(() => THEME_CACHE.cleanup(url))
+        return THEME_CACHE.add(url, () =>
+          fetch(/* @vite-ignore */ url).then(result => result.json()),
+        )
       },
     )
     const [lang] = createResource(
@@ -77,12 +89,12 @@ class ShikiTextareaElement extends Element {
       async lang => {
         const url =
           typeof CDN === 'string' ? `${CDN}/tm-grammars/grammars/${lang}.json` : CDN('lang', lang)
-        if (typeof url === 'string') {
-          return fetch(/* @vite-ignore */ url)
+        onCleanup(() => LANG_CACHE.cleanup(url))
+        return LANG_CACHE.add(url, () =>
+          fetch(/* @vite-ignore */ url)
             .then(result => result.json())
-            .then(json => [json])
-        }
-        return url
+            .then(result => [result] as any),
+        )
       },
     )
 
