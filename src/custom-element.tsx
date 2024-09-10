@@ -10,6 +10,7 @@ import { createShikiTextarea } from './core'
 import classnames from './index.module.css?classnames'
 import css from './index.module.css?raw'
 import { Cache } from './utils/cache'
+import { sheet } from './utils/sheet.js'
 
 /**********************************************************************************/
 /*                                                                                */
@@ -66,13 +67,24 @@ const ShikiTextarea = createShikiTextarea(Object.fromEntries(classnames.map(name
 const THEME_CACHE = new Cache<Promise<ThemeRegistration>>()
 const LANG_CACHE = new Cache<Promise<LanguageRegistration>>()
 
+const ShikiTextareaStyleSheet = sheet(css)
+
 @element('shiki-textarea')
 class ShikiTextareaElement extends Element {
   @stringAttribute lang = 'tsx' as BundledLanguage
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
+  @stringAttribute stylesheet = ''
 
   template = () => {
+    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets
+
+    adoptedStyleSheets.push(ShikiTextareaStyleSheet)
+
+    if (this.stylesheet) {
+      adoptedStyleSheets.push(sheet(this.stylesheet))
+    }
+
     const [theme] = createResource(
       () => this.theme,
       async theme => {
@@ -100,8 +112,6 @@ class ShikiTextareaElement extends Element {
 
     return <ShikiTextarea lang={lang()} theme={theme()} value={this.value} />
   }
-
-  static css = css
 }
 
 // NOTE:  <shiki-textarea/> is already defined with lume's @element() decorator.
