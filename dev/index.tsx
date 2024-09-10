@@ -9,18 +9,22 @@ setCDN(`https://raw.githubusercontent.com/shikijs/textmate-grammars-themes/main/
 
 const App: Component = () => {
   const [value, setValue] = createSignal('const sum = (a: string, b: string) => a + b')
+
+  // Config
   const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>(
     'custom-element',
   )
   const [currentThemeName, setCurrentThemeName] = createSignal<BundledTheme>('aurora-x')
   const [currentLanguageName, setCurrentLanguageName] = createSignal<BundledLanguage>('tsx')
 
-  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
-  const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
-
   const [fontSize, setFontSize] = createSignal(10)
   const [padding, setPadding] = createSignal(5)
   const [amount, setAmount] = createSignal(1)
+  const [editable, setEditable] = createSignal(true)
+
+  // Derived imports
+  const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
+  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
 
   return (
     <div class="app">
@@ -89,6 +93,17 @@ const App: Component = () => {
               value={amount()}
             />
           </div>
+          <div>
+            <label for="editable">editable</label>
+            <button
+              id="editable"
+              onClick={e => {
+                setEditable(editable => !editable)
+              }}
+            >
+              {editable() ? 'enabled' : 'disabled'}
+            </button>
+          </div>
         </footer>
       </div>
 
@@ -99,6 +114,7 @@ const App: Component = () => {
               when={componentType() === 'custom-element'}
               fallback={
                 <ShikiTextarea
+                  editable={editable()}
                   value={value()}
                   lang={language()}
                   theme={theme()}
@@ -111,6 +127,7 @@ const App: Component = () => {
               }
             >
               <shiki-textarea
+                editable={editable()}
                 value={value()}
                 style={{
                   'font-size': `${fontSize()}pt`,

@@ -1,4 +1,10 @@
-import { element, Element, ElementAttributes, stringAttribute } from '@lume/element'
+import {
+  booleanAttribute,
+  element,
+  Element,
+  ElementAttributes,
+  stringAttribute,
+} from '@lume/element'
 import {
   BundledLanguage,
   BundledTheme,
@@ -20,7 +26,7 @@ import { sheet } from './utils/sheet.js'
 
 interface ShikiTextareaAttributes
   extends Omit<
-    ElementAttributes<ShikiTextareaElement, 'lang' | 'theme' | 'value'>,
+    ElementAttributes<ShikiTextareaElement, 'lang' | 'theme' | 'value' | 'editable'>,
     'onInput' | 'oninput'
   > {
   oninput?: (event: InputEvent & { target: HTMLTextAreaElement }) => any
@@ -88,9 +94,10 @@ class ShikiTextareaElement extends Element {
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
   @stringAttribute stylesheet = ''
+  @booleanAttribute editable = true
 
   template = () => {
-    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets
+    const adoptedStyleSheets = this.shadowRoot!.adoptedStyleSheets
 
     adoptedStyleSheets.push(ShikiTextareaStyleSheet)
 
@@ -126,7 +133,9 @@ class ShikiTextareaElement extends Element {
       },
     )
 
-    return <ShikiTextarea lang={lang()} theme={theme()} value={this.value} />
+    return (
+      <ShikiTextarea lang={lang()} theme={theme()} value={this.value} editable={this.editable} />
+    )
   }
 }
 

@@ -58,6 +58,8 @@ export interface ShikiTextareaProps
   extends Omit<ComponentProps<'div'>, 'style' | 'onInput' | 'lang'> {
   /** The default source code to initialize the editor with. */
   defaultValue?: string
+  /** If textarea is editable or not. */
+  editable?: boolean
   /**
    * The programming language of the source code for syntax highlighting.
    *
@@ -119,6 +121,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
       'value',
       'style',
       'theme',
+      'editable',
     ])
     const [source, setSource] = createSignal(config.defaultValue || config.value)
     const [characterDimensions, setCharacterDimensions] = createSignal<Dimensions>({
@@ -203,6 +206,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
             autocomplete="off"
             spellcheck={false}
             class={styles.textarea}
+            disabled={!config.editable}
             onInput={e => {
               const value = e.currentTarget.value
               updateSource(value)
