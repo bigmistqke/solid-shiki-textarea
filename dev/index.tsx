@@ -69,6 +69,7 @@ const App: Component = () => {
                   lang={language()}
                   theme={theme()}
                   style={{
+                    'font-size': '16pt',
                     '--padding': '10px',
                   }}
                   onInput={e => setValue(e.target.value)}
