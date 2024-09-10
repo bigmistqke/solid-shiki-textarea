@@ -4,6 +4,7 @@ import { createResource } from 'solid-js'
 import { createShikiTextarea } from './core'
 import classnames from './index.module.css?classnames'
 import css from './index.module.css?raw'
+import { sheet } from './utils/sheet.js'
 
 /**********************************************************************************/
 /*                                                                                */
@@ -44,6 +45,8 @@ declare global {
 
 const ShikiTextarea = createShikiTextarea(Object.fromEntries(classnames.map(name => [name, name])))
 
+const ShikiTextareaStyleSheet = sheet(css)
+
 @element('shiki-textarea')
 class ShikiTextareaElement extends Element {
   @stringAttribute lang = 'tsx' as BundledLanguage
@@ -52,6 +55,9 @@ class ShikiTextareaElement extends Element {
   @stringAttribute value = ''
 
   template = () => {
+    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets
+
+    adoptedStyleSheets.push(ShikiTextareaStyleSheet)
     const [theme] = createResource(
       () => this.theme,
       theme =>
@@ -69,8 +75,6 @@ class ShikiTextareaElement extends Element {
 
     return <ShikiTextarea lang={lang()} theme={theme()} value={this.value} />
   }
-
-  static css = css
 }
 
 if (!customElements.get('shiki-textarea')) {
