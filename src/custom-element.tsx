@@ -52,7 +52,20 @@ declare global {
 type Cdn = string | ((type: 'lang' | 'theme', id: string) => string)
 let CDN: Cdn = 'https://esm.sh'
 
-export function setCdn(cdn: Cdn) {
+/**
+ * Sets the CDN from which the theme/lang of <shiki-textarea/> is fetched.
+ *
+ * Accepts as arguments
+ * - url: string
+ * - callback: (type: 'lang' | 'theme', id: string) => string
+ *
+ * When given an url, this will be used to fetch
+ * - `${cdn}/tm-themes/themes/${theme}.json` for the `themes`
+ * - `${cdn}/tm-grammars/grammars/${grammar}.json` for the `langs`
+ *
+ * When given a callback, the returned string will be used to fetch.
+ */
+export function setCDN(cdn: Cdn) {
   CDN = cdn
 }
 
