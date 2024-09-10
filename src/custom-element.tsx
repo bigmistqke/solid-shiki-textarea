@@ -73,11 +73,6 @@ class ShikiTextareaElement extends Element {
   static css = css
 }
 
-/**
- * NOOP to prevent <shiki-textarea/> to be treeshaken out.
- */
-export function registerShikiTextarea() {
-  if (!customElements.get('shiki-textarea')) {
-    customElements.define('shiki-textarea', ShikiTextareaElement)
-  }
+if (!customElements.get('shiki-textarea')) {
+  customElements.define('shiki-textarea', ShikiTextareaElement)
 }
