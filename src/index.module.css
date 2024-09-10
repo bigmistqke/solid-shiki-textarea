@@ -1,3 +1,7 @@
+:host {
+  display: contents;
+}
+
 .editor {
   display: inline-block;
   position: relative;
