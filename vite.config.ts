@@ -24,6 +24,7 @@ export default defineConfig({
       entry: {
         index: normalizePath(path.resolve(__dirname, 'src/index.tsx')),
         'custom-element': normalizePath(path.resolve(__dirname, 'src/custom-element.tsx')),
+        tm: normalizePath(path.resolve(__dirname, 'src/tm/index.ts')),
       },
       name: 'solid-shiki-textarea',
       formats: ['es'],

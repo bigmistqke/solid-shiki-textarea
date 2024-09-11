@@ -1,9 +1,10 @@
 import self from '.?raw'
-import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
+// import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
 import { createSignal, For, Index, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
 import 'solid-shiki-textarea/custom-element'
+import { Language, languages, Theme, themes } from 'solid-shiki-textarea/tm'
 import './index.css'
 
 const App: Component = () => {
@@ -15,8 +16,8 @@ const App: Component = () => {
 
   // Config
   const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>('solid')
-  const [currentThemeName, setCurrentThemeName] = createSignal<BundledTheme>('aurora-x')
-  const [currentLanguageName, setCurrentLanguageName] = createSignal<BundledLanguage>('tsx')
+  const [currentThemeName, setCurrentThemeName] = createSignal<Theme>('aurora-x')
+  const [currentLanguageName, setCurrentLanguageName] = createSignal<Language>('tsx')
 
   const [fontSize, setFontSize] = createSignal(10)
   const [padding, setPadding] = createSignal(5)
@@ -24,8 +25,12 @@ const App: Component = () => {
   const [editable, setEditable] = createSignal(true)
 
   // Derived imports
-  const theme = () => bundledThemes[currentThemeName()]().then(module => module.default)
-  const language = () => bundledLanguages[currentLanguageName()]().then(module => module.default)
+  const theme = () =>
+    fetch(`https://esm.sh/tm-themes/themes/${currentThemeName()}.json`).then(value => value.json())
+  const language = () =>
+    fetch(`https://esm.sh/tm-grammars/grammars/${currentLanguageName()}.json`)
+      .then(value => value.json())
+      .then(value => [value])
 
   return (
     <div class="app">
@@ -49,9 +54,9 @@ const App: Component = () => {
             <select
               id="theme"
               value={currentThemeName()}
-              onInput={e => setCurrentThemeName(e.currentTarget.value as BundledTheme)}
+              onInput={e => setCurrentThemeName(e.currentTarget.value as Theme)}
             >
-              <For each={Object.keys(bundledThemes)}>{theme => <option>{theme}</option>}</For>
+              <For each={themes}>{theme => <option>{theme}</option>}</For>
             </select>
           </div>
           <div>
@@ -59,11 +64,9 @@ const App: Component = () => {
             <select
               id="lang"
               value={currentLanguageName()}
-              onInput={e => setCurrentLanguageName(e.currentTarget.value as BundledLanguage)}
+              onInput={e => setCurrentLanguageName(e.currentTarget.value as Language)}
             >
-              <For each={Object.keys(bundledLanguages)}>
-                {language => <option>{language}</option>}
-              </For>
+              <For each={languages}>{language => <option>{language}</option>}</For>
             </select>
           </div>
           <br />
