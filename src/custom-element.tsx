@@ -145,8 +145,10 @@ class ShikiTextareaElement extends Element {
 }
 
 // NOTE:  <shiki-textarea/> is already defined with lume's @element() decorator.
-//        This line will always be NOOP, but is needed for rollup not to treeshake
+//        register is a NOOP, but is needed for rollup not to treeshake
 //        the custom-element declaration out of the bundle.
-if (!customElements.get('shiki-textarea')) {
-  customElements.define('shiki-textarea', ShikiTextareaElement)
+export function register() {
+  if (!customElements.get('shiki-textarea')) {
+    customElements.define('shiki-textarea', ShikiTextareaElement)
+  }
 }

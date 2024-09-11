@@ -38,7 +38,7 @@
   },
   "scripts": {
     "dev": "vite serve dev",
-    "build": "vite build && vite build --config vite.ce.config.ts",
+    "build": "vite build",
     "build:dev": "vite build dev",
     "preview:dev": "vite preview dev",
     "prepublishOnly": "pnpm build",
