@@ -56,6 +56,8 @@
 code {
   font-size: inherit;
   line-height: inherit;
+  /* fixes color change when textarea is focused */
+  backface-visibility: hidden;
 }
 .container .textarea {
   position: absolute;
