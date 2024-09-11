@@ -110,16 +110,7 @@ interface ShikiTextareaAttributes extends {
 ### Usage
 
 ```tsx
-import { setCDN } from 'solid-shiki-textarea/custom-element'
-
-// Set base-url of CDN directly (defaults to https://esm.sh)
-setCDN('https://unpkg.com')
-
-// relative to the root
-setCDN('/assets/shiki')
-
-// Or use the callback-form
-setCDN((type, id) => `./shiki/${type}/${id}.json`)
+import 'solid-shiki-textarea/custom-element'
 
 export default () => (
   <shiki-textarea
@@ -132,310 +123,77 @@ export default () => (
       'font-size': '16pt',
     }}
     onInput={e => console.log(e.target.value)}
-    stylesheet=".editor{ background:transparent;}"
+    stylesheet="code, code * { font-style:normal; }"
   />
 )
 ```
 
-For the solid-component, these can also be set directly from the component's `style`-prop:
+### Styling The Custom Element
 
-```tsx
-<ShikiTextarea style={{padding: '10px'}}>
-// instead of
-<ShikiTextarea style={{'--padding': '10px'}}>
+Some DOM [`::part()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) are exported.
+
+- `root` can be used to override the `background`, set a `padding` or change `font-size` and
+  `line-height`.
+- `textarea` can be used to change the selection color.
+- `code` can be used to change the `code` tag.
+
+```css
+shiki-textarea::part(root) {
+  padding: 20px;
+  background: transparent;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+shiki-textarea::part(textarea)::selection {
+  background: deepskyblue;
+}
 ```
 
-## Language and Themes List
-
-Bit complicated to export the themes and languages list without importing everything. So the
-following lists are provided as arrays ready to use.
+The attribute `stylesheet` could be used as a last resort to customize the theme. In the following
+example we avoid italics in the rendered coded. The stylesheet is created, cached and reused on the
+different `shiki-textarea` instances.
 
 ```tsx
-// list from https://github.com/shikijs/textmate-grammars-themes/tree/main/packages/tm-themes/themes
-const themes = [
-  'andromeeda',
-  'aurora-x',
-  'ayu-dark',
-  'catppuccin-frappe',
-  'catppuccin-latte',
-  'catppuccin-macchiato',
-  'catppuccin-mocha',
-  'dark-plus',
-  'dracula-soft',
-  'dracula',
-  'everforest-dark',
-  'everforest-light',
-  'github-dark-default',
-  'github-dark-dimmed',
-  'github-dark-high-contrast',
-  'github-dark',
-  'github-light-default',
-  'github-light-high-contrast',
-  'github-light',
-  'houston',
-  'laserwave',
-  'light-plus',
-  'material-theme-darker',
-  'material-theme-lighter',
-  'material-theme-ocean',
-  'material-theme-palenight',
-  'material-theme',
-  'min-dark',
-  'min-light',
-  'monokai',
-  'night-owl',
-  'nord',
-  'one-dark-pro',
-  'one-light',
-  'plastic',
-  'poimandres',
-  'red',
-  'rose-pine-dawn',
-  'rose-pine-moon',
-  'rose-pine',
-  'slack-dark',
-  'slack-ochin',
-  'snazzy-light',
-  'solarized-dark',
-  'solarized-light',
-  'synthwave-84',
-  'tokyo-night',
-  'vesper',
-  'vitesse-black',
-  'vitesse-dark',
-  'vitesse-light',
-]
+<shiki-textarea
+  language="tsx"
+  theme="andromeeda"
+  value="const sum = (a: string, b: string) => a + b"
+  editable={true}
+  style={{
+    '--padding': '10px',
+    'font-size': '16pt',
+  }}
+  onInput={e => console.log(e.target.value)}
+  stylesheet="code, code * { font-style:normal; }"
+/>
+```
 
-// list from https://github.com/shikijs/textmate-grammars-themes/tree/main/packages/tm-grammars/grammars
-const languages = [
-  'abap',
-  'actionscript-3',
-  'ada',
-  'angular-expression',
-  'angular-html',
-  'angular-inline-style',
-  'angular-inline-template',
-  'angular-let-declaration',
-  'angular-template-blocks',
-  'angular-template',
-  'angular-ts',
-  'apache',
-  'apex',
-  'apl',
-  'applescript',
-  'ara',
-  'asciidoc',
-  'asm',
-  'astro',
-  'awk',
-  'ballerina',
-  'bat',
-  'beancount',
-  'berry',
-  'bibtex',
-  'bicep',
-  'blade',
-  'c',
-  'cadence',
-  'clarity',
-  'clojure',
-  'cmake',
-  'cobol',
-  'codeowners',
-  'codeql',
-  'coffee',
-  'common-lisp',
-  'coq',
-  'cpp-macro',
-  'cpp',
-  'crystal',
-  'csharp',
-  'css',
-  'csv',
-  'cue',
-  'cypher',
-  'd',
-  'dart',
-  'dax',
-  'desktop',
-  'diff',
-  'docker',
-  'dotenv',
-  'dream-maker',
-  'edge',
-  'elixir',
-  'elm',
-  'emacs-lisp',
-  'erb',
-  'erlang',
-  'es-tag-css',
-  'es-tag-glsl',
-  'es-tag-html',
-  'es-tag-sql',
-  'es-tag-xml',
-  'fennel',
-  'fish',
-  'fluent',
-  'fortran-fixed-form',
-  'fortran-free-form',
-  'fsharp',
-  'gdresource',
-  'gdscript',
-  'gdshader',
-  'genie',
-  'gherkin',
-  'git-commit',
-  'git-rebase',
-  'gleam',
-  'glimmer-js',
-  'glimmer-ts',
-  'glsl',
-  'gnuplot',
-  'go',
-  'graphql',
-  'groovy',
-  'hack',
-  'haml',
-  'handlebars',
-  'haskell',
-  'haxe',
-  'hcl',
-  'hjson',
-  'hlsl',
-  'html-derivative',
-  'html',
-  'http',
-  'hxml',
-  'hy',
-  'imba',
-  'ini',
-  'java',
-  'javascript',
-  'jinja-html',
-  'jinja',
-  'jison',
-  'json',
-  'json5',
-  'jsonc',
-  'jsonl',
-  'jsonnet',
-  'jssm',
-  'jsx',
-  'julia',
-  'kotlin',
-  'kusto',
-  'latex',
-  'lean',
-  'less',
-  'liquid',
-  'log',
-  'logo',
-  'lua',
-  'luau',
-  'make',
-  'markdown-vue',
-  'markdown',
-  'marko',
-  'matlab',
-  'mdc',
-  'mdx',
-  'mermaid',
-  'mojo',
-  'move',
-  'narrat',
-  'nextflow',
-  'nginx',
-  'nim',
-  'nix',
-  'nushell',
-  'objective-c',
-  'objective-cpp',
-  'ocaml',
-  'pascal',
-  'perl',
-  'php',
-  'plsql',
-  'po',
-  'postcss',
-  'powerquery',
-  'powershell',
-  'prisma',
-  'prolog',
-  'proto',
-  'pug',
-  'puppet',
-  'purescript',
-  'python',
-  'qml',
-  'qmldir',
-  'qss',
-  'r',
-  'racket',
-  'raku',
-  'razor',
-  'reg',
-  'regexp',
-  'rel',
-  'riscv',
-  'rst',
-  'ruby',
-  'rust',
-  'sas',
-  'sass',
-  'scala',
-  'scheme',
-  'scss',
-  'shaderlab',
-  'shellscript',
-  'shellsession',
-  'smalltalk',
-  'solidity',
-  'soy',
-  'sparql',
-  'splunk',
-  'sql',
-  'ssh-config',
-  'stata',
-  'stylus',
-  'svelte',
-  'swift',
-  'system-verilog',
-  'systemd',
-  'tasl',
-  'tcl',
-  'templ',
-  'terraform',
-  'tex',
-  'toml',
-  'ts-tags',
-  'tsv',
-  'tsx',
-  'turtle',
-  'twig',
-  'typescript',
-  'typespec',
-  'typst',
-  'v',
-  'vala',
-  'vb',
-  'verilog',
-  'vhdl',
-  'viml',
-  'vue-directives',
-  'vue-html',
-  'vue-interpolations',
-  'vue-sfc-style-variable-injection',
-  'vue',
-  'vyper',
-  'wasm',
-  'wenyan',
-  'wgsl',
-  'wikitext',
-  'wolfram',
-  'xml',
-  'xsl',
-  'yaml',
-  'zenscript',
-  'zig',
-]
+## CDN
+
+```tsx
+// from solid component
+import { setCDN } from 'solid-shiki-textarea'
+
+// from custom element
+import { setCDN } from 'solid-shiki-textarea/custom-element'
+
+// Set base-url of CDN directly (defaults to https://esm.sh)
+setCDN('https://unpkg.com')
+
+// relative to the root
+setCDN('/assets/shiki')
+
+// Or use the callback-form
+setCDN((type, id) => `./shiki/${type}/${id}.json`)
+```
+
+## Themes & Languages
+
+Both, the languages and themes list are exported as `string[]`.
+
+```tsx
+import type { Theme, Language } from 'solid-shiki-textarea/tm'
+
+import { themes, languages } from 'solid-shiki-textarea/tm'
 ```
