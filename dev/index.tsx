@@ -111,34 +111,36 @@ const App: Component = () => {
       <main>
         <Index each={Array.from({ length: amount() }).fill('')}>
           {() => (
-            <Show
-              when={componentType() === 'custom-element'}
-              fallback={
-                <ShikiTextarea
+            <div class="shikies">
+              <Show
+                when={componentType() === 'custom-element'}
+                fallback={
+                  <ShikiTextarea
+                    editable={editable()}
+                    value={value()}
+                    lang={language()}
+                    theme={theme()}
+                    style={{
+                      'font-size': `${fontSize()}pt`,
+                      '--padding': `${padding()}px`,
+                    }}
+                    onInput={e => setValue(e.target.value)}
+                  />
+                }
+              >
+                <shiki-textarea
                   editable={editable()}
                   value={value()}
-                  lang={language()}
-                  theme={theme()}
                   style={{
                     'font-size': `${fontSize()}pt`,
                     '--padding': `${padding()}px`,
                   }}
+                  lang={currentLanguageName()}
+                  theme={currentThemeName()}
                   onInput={e => setValue(e.target.value)}
                 />
-              }
-            >
-              <shiki-textarea
-                editable={editable()}
-                value={value()}
-                style={{
-                  'font-size': `${fontSize()}pt`,
-                  '--padding': `${padding()}px`,
-                }}
-                lang={currentLanguageName()}
-                theme={currentThemeName()}
-                onInput={e => setValue(e.target.value)}
-              />
-            </Show>
+              </Show>
+            </div>
           )}
         </Index>
       </main>

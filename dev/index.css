@@ -91,11 +91,20 @@ main {
   box-sizing: border-box;
   padding: 15px;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .shikiTextarea {
   margin: 15px;
   padding: 5px;
   text-align: left;
+}
+
+.shikies {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+  box-sizing: border-box;
+  flex-basis: 50%;
+  height: 100%;
 }

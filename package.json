@@ -13,9 +13,7 @@
   "bugs": {
     "url": "https://github.com/bigmistqke/solid-shiki-textarea/issues"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "private": false,
   "sideEffects": false,
   "type": "module",
@@ -28,17 +26,14 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "dist/index.d.ts"
-      ],
-      "custom-element": [
-        "dist/custom-element.d.ts"
-      ]
+      "*": ["dist/index.d.ts"],
+      "custom-element": ["dist/custom-element.d.ts"]
     }
   },
   "scripts": {
     "dev": "vite serve dev",
     "build": "vite build",
+    "build-watch": "vite build --watch",
     "build:dev": "vite build dev",
     "preview:dev": "vite preview dev",
     "prepublishOnly": "pnpm build",
@@ -83,9 +78,7 @@
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
   },
-  "keywords": [
-    "solid"
-  ],
+  "keywords": ["solid"],
   "packageManager": "pnpm@9.1.1",
   "engines": {
     "node": ">=18",
