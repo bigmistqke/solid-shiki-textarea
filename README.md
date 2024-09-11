@@ -33,13 +33,15 @@ interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' | 'lang
     | Promise<LanguageRegistration[]>
     | Promise<{ default: LanguageRegistration[] }>
     | LanguageRegistration[]
-  style?: JSX.CSSProperties
   theme:
     | Promise<ThemeRegistrationRaw | ThemeRegistration>
     | Promise<{ default: ThemeRegistrationRaw | ThemeRegistration }>
     | ThemeRegistrationRaw
     | ThemeRegistration
   value: string
+  editable?: boolean
+  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
+  style?: JSX.CSSProperties
 }
 ```
 
@@ -94,12 +96,14 @@ We also export a custom-element wrapper `<shiki-textarea/>` powered by
 
 ### Types
 
-```tsx
+```ts
 interface ShikiTextareaAttributes extends {
   lang?: BundledLanguage
-  cdn?: string
   theme?: BundledTheme
   value?: string
+  editable?: boolean
+  onInput?: (event:InputEvent & { target: HTMLTextAreaElement }) => void
+  stylesheet?: string | CSSStyleSheet
 }
 ```
 
