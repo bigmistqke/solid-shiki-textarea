@@ -57,6 +57,7 @@ export default () => (
     lang={tsx}
     theme={minLight}
     value="const sum = (a: string, b: string) => a + b"
+    editable={true}
     style={{
       padding: '10px',
       'font-size': '16pt',
@@ -76,6 +77,7 @@ export default () => (
     lang={import('https://esm.sh/shiki/langs/tsx.mjs')}
     theme={import('https://esm.sh/shiki/themes/min-light.mjs')}
     value="const sum = (a: string, b: string) => a + b"
+    editable={true}
     style={{
       padding: '10px',
       'font-size': '16pt',
@@ -116,11 +118,13 @@ export default () => (
     lang="tsx"
     theme="andromeeda"
     value="const sum = (a: string, b: string) => a + b"
+    editable={true}
     style={{
       '--padding': '10px',
       'font-size': '16pt',
     }}
     onInput={e => console.log(e.target.value)}
+    stylesheet=".editor{ background:transparent;}"
   />
 )
 ```
