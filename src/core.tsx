@@ -151,31 +151,33 @@ export function createShikiTextarea(styles: Record<string, string>) {
     createRenderEffect(() => setSource(config.value))
 
     return (
-      <div
-        ref={props.ref}
-        class={clsx(styles.editor, config.class)}
-        style={{
-          ...themeStyles(),
-          ...config.style,
-        }}
-        {...rest}
-      >
-        <div class={styles.container}>
-          <code class={styles.code} innerHTML={html() || previous} />
-          <textarea
-            inputmode="none"
-            autocomplete="off"
-            spellcheck={false}
-            class={styles.textarea}
-            disabled={!config.editable}
-            onInput={e => {
-              const value = e.currentTarget.value
-              setSource(value)
-              config.onInput?.(e)
-            }}
-            value={config.value}
-          />
-          <code class={styles.character} innerHTML="&nbsp;" aria-hidden />
+      <div class="root">
+        <div
+          ref={props.ref}
+          class={clsx(styles.editor, config.class)}
+          style={{
+            ...themeStyles(),
+            ...config.style,
+          }}
+          {...rest}
+        >
+          <div class={styles.container}>
+            <code class={styles.code} innerHTML={html() || previous} />
+            <textarea
+              inputmode="none"
+              autocomplete="off"
+              spellcheck={false}
+              class={styles.textarea}
+              disabled={!config.editable}
+              onInput={e => {
+                const value = e.currentTarget.value
+                setSource(value)
+                config.onInput?.(e)
+              }}
+              value={config.value}
+            />
+            <code class={styles.character} innerHTML="&nbsp;" aria-hidden />
+          </div>
         </div>
       </div>
     )
