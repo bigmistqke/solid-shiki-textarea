@@ -137,16 +137,6 @@ export default () => (
 )
 ```
 
-## CSS Variables
-
-The following css-variables are available:
-
-- `--padding`
-- `--padding-top`
-- `--padding-bottom`
-- `--padding-left`
-- `--padding-right`
-
 For the solid-component, these can also be set directly from the component's `style`-prop:
 
 ```tsx
