@@ -15,22 +15,12 @@
   caret-color: var(--foreground-color);
 }
 
-.editor,
 .container {
   display: flex;
+  position: relative;
+  flex: 1;
   flex: 1;
   box-sizing: border-box;
-}
-
-.editor {
-  display: block;
-  position: relative;
-  font-size: inherit;
-}
-
-.container {
-  position: relative;
-  flex: 1;
 
   & code {
     display: block;
@@ -50,6 +40,7 @@
     font-size: inherit;
     line-height: inherit;
   }
+
   & .textarea {
     position: absolute;
     top: 0px;

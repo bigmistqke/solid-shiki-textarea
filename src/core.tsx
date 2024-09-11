@@ -152,40 +152,39 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     return (
       <div
-        class={styles.root}
+        class={clsx(styles.root, config.class)}
         style={{
           ...themeStyles(),
           ...config.style,
         }}
+        {...rest}
       >
-        <div ref={props.ref} class={clsx(styles.editor, config.class)} {...rest}>
-          <div class={styles.container}>
-            <code class={styles.code} innerHTML={html() || previous} />
-            <textarea
-              inputmode="none"
-              autocomplete="off"
-              spellcheck={false}
-              class={styles.textarea}
-              disabled={!config.editable}
-              on:input={e => {
-                const target = e.currentTarget
-                const value = target.value
+        <div class={styles.container}>
+          <code class={styles.code} innerHTML={html() || previous} />
+          <textarea
+            inputmode="none"
+            autocomplete="off"
+            spellcheck={false}
+            class={styles.textarea}
+            disabled={!config.editable}
+            on:input={e => {
+              const target = e.currentTarget
+              const value = target.value
 
-                // local
-                setSource(value)
+              // local
+              setSource(value)
 
-                // copy to custom element document fragment
-                const rootNode = target.getRootNode()
-                if (rootNode && rootNode instanceof ShadowRoot) {
-                  rootNode.value = value
-                }
+              // copy to custom element document fragment
+              const rootNode = target.getRootNode()
+              if (rootNode && rootNode instanceof ShadowRoot) {
+                rootNode.value = value
+              }
 
-                // user provided callback
-                config.onInput?.(e)
-              }}
-              value={config.value}
-            />
-          </div>
+              // user provided callback
+              config.onInput?.(e)
+            }}
+            value={config.value}
+          />
         </div>
       </div>
     )
