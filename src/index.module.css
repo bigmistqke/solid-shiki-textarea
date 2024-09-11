@@ -1,9 +1,15 @@
 :host {
   display: contents;
+
+  .root {
+    width: inherit;
+    height: inherit;
+  }
 }
 
 .root {
-  display: block;
+  display: flex;
+  box-sizing: border-box;
   background-color: var(--background-color);
   isolation: isolate;
   padding: inherit;
@@ -11,7 +17,8 @@
   padding-right: inherit;
   padding-bottom: inherit;
   padding-left: inherit;
-  height: max-content;
+  min-width: max-content;
+  min-height: max-content;
   caret-color: var(--foreground-color);
 }
 
