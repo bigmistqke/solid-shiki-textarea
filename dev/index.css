@@ -91,7 +91,7 @@ main {
   box-sizing: border-box;
   padding: 15px;
   height: 100vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .shikiTextarea {
