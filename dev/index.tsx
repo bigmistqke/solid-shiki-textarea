@@ -3,6 +3,7 @@ import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from '
 import { createSignal, For, Index, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
+import 'solid-shiki-textarea/custom-element'
 import './index.css'
 
 const App: Component = () => {
