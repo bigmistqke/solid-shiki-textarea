@@ -42,7 +42,7 @@ async function resolve<T extends Record<string, any>>(
 /*                                                                                */
 /**********************************************************************************/
 export interface ShikiTextareaProps
-  extends Omit<ComponentProps<'div'>, 'style' | 'onInput' | 'lang'> {
+  extends Omit<ComponentProps<'div'>, 'style' | 'onInput' | 'language'> {
   /** If textarea is editable or not. */
   editable?: boolean
   /**
@@ -51,14 +51,14 @@ export interface ShikiTextareaProps
    * @example static import
    * ```tsx
    * import tsx from "shiki/langs/tsx.mjs"
-   * return <ShikiTextArea lang={tsx}/>
+   * return <ShikiTextArea language={tsx}/>
    * ```
    * @example dynamic import
    * ```tsx
-   * return <ShikiTextArea lang={import('shiki/langs/tsx.mjs')}/>
+   * return <ShikiTextArea language={import('shiki/langs/tsx.mjs')}/>
    * ```
    */
-  lang:
+  language:
     | Promise<LanguageRegistration[]>
     | Promise<{ default: LanguageRegistration[] }>
     | LanguageRegistration[]
@@ -100,7 +100,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
   return function ShikiTextarea(props: ShikiTextareaProps) {
     const [config, rest] = splitProps(props, [
       'class',
-      'lang',
+      'language',
       'onInput',
       'value',
       'style',
@@ -110,7 +110,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
     const [source, setSource] = createSignal(config.value)
 
     const [theme] = createResource(() => config.theme, resolve)
-    const [lang] = createResource(() => config.lang, resolve)
+    const [lang] = createResource(() => config.language, resolve)
     const [highlighter] = createResource(every(theme, lang), async ([theme, lang]) => {
       const highlighter = await HIGHLIGHTER
 
@@ -156,6 +156,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     return (
       <div
+        part="root"
         class={clsx(styles.root, config.class)}
         style={{
           ...themeStyles(),
@@ -164,8 +165,9 @@ export function createShikiTextarea(styles: Record<string, string>) {
         {...rest}
       >
         <div class={styles.container}>
-          <code class={styles.code} innerHTML={html() || previous} />
+          <code part="code" class={styles.code} innerHTML={html() || previous} />
           <textarea
+            part="textarea"
             inputmode="none"
             autocomplete="off"
             spellcheck={false}
