@@ -21,9 +21,11 @@ export default defineConfig({
   server: { port: 3000 },
   build: {
     lib: {
-      entry: normalizePath(path.resolve(__dirname, 'src/index.tsx')),
+      entry: {
+        index: normalizePath(path.resolve(__dirname, 'src/index.tsx')),
+        'custom-element': normalizePath(path.resolve(__dirname, 'src/custom-element.tsx')),
+      },
       name: 'solid-shiki-textarea',
-      fileName: `index`,
       formats: ['es'],
     },
     minify: false,
