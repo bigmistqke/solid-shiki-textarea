@@ -1,9 +1,14 @@
 :host {
   display: contents;
 
-  .root {
-    width: inherit;
-    height: inherit;
+  & .root {
+    padding: inherit;
+    padding-top: inherit;
+    padding-right: inherit;
+    padding-bottom: inherit;
+    padding-left: inherit;
+    min-width: inherit;
+    min-height: inherit;
   }
 }
 
@@ -12,13 +17,8 @@
   box-sizing: border-box;
   background-color: var(--background-color);
   isolation: isolate;
-  padding: inherit;
-  padding-top: inherit;
-  padding-right: inherit;
-  padding-bottom: inherit;
-  padding-left: inherit;
-  min-width: max-content;
-  min-height: max-content;
+  width: fit-content;
+  height: fit-content;
   caret-color: var(--foreground-color);
 }
 
