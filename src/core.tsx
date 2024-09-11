@@ -156,6 +156,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     return (
       <div
+        part="root"
         class={clsx(styles.root, config.class)}
         style={{
           ...themeStyles(),
@@ -164,8 +165,9 @@ export function createShikiTextarea(styles: Record<string, string>) {
         {...rest}
       >
         <div class={styles.container}>
-          <code class={styles.code} innerHTML={html() || previous} />
+          <code part="code" class={styles.code} innerHTML={html() || previous} />
           <textarea
+            part="textarea"
             inputmode="none"
             autocomplete="off"
             spellcheck={false}
