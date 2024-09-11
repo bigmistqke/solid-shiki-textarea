@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@lume/element": "^0.12.0",
-    "@solid-primitives/list": "^0.0.100",
     "clsx": "^2.1.1"
   },
   "peerDependencies": {
