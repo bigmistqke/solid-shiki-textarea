@@ -4,6 +4,7 @@
 
 .root {
   display: block;
+  contain: paint;
 }
 
 .editor,
@@ -32,11 +33,10 @@
 .container {
   position: relative;
   flex: 1;
-
   & code:not(.character) {
     display: block;
     position: relative;
-
+    z-index: 1;
     pointer-events: none;
     font-family: monospace;
     white-space: pre;
