@@ -114,6 +114,10 @@ import { setCDN } from 'solid-shiki-textarea/custom-element'
 
 // Set base-url of CDN directly (defaults to https://esm.sh)
 setCDN('https://unpkg.com')
+
+// relative to the root
+setCDN('/assets/shiki')
+
 // Or use the callback-form
 setCDN((type, id) => `./shiki/${type}/${id}.json`)
 
