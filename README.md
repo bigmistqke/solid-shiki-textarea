@@ -146,8 +146,6 @@ The following css-variables are available:
 - `--padding-bottom`
 - `--padding-left`
 - `--padding-right`
-- `--width`
-- `--height`
 
 For the solid-component, these can also be set directly from the component's `style`-prop:
 
