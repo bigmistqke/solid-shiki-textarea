@@ -99,3 +99,12 @@ main {
   padding: 5px;
   text-align: left;
 }
+
+.shikies {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+  box-sizing: border-box;
+  flex-basis: 50%;
+  height: 100%;
+}
