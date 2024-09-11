@@ -137,24 +137,6 @@ export default () => (
 )
 ```
 
-## CSS Variables
-
-The following css-variables are available:
-
-- `--padding`
-- `--padding-top`
-- `--padding-bottom`
-- `--padding-left`
-- `--padding-right`
-
-For the solid-component, these can also be set directly from the component's `style`-prop:
-
-```tsx
-<ShikiTextarea style={{padding: '10px'}}>
-// instead of
-<ShikiTextarea style={{'--padding': '10px'}}>
-```
-
 ## Language and Themes List
 
 Bit complicated to export the themes and languages list without importing everything. So the

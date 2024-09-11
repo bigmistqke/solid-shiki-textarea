@@ -122,7 +122,7 @@ const App: Component = () => {
                     theme={theme()}
                     style={{
                       'font-size': `${fontSize()}pt`,
-                      '--padding': `${padding()}px`,
+                      padding: `${padding()}px`,
                     }}
                     onInput={e => setValue(e.target.value)}
                   />
@@ -133,7 +133,7 @@ const App: Component = () => {
                   value={value()}
                   style={{
                     'font-size': `${fontSize()}pt`,
-                    '--padding': `${padding()}px`,
+                    padding: `${padding()}px`,
                   }}
                   lang={currentLanguageName()}
                   theme={currentThemeName()}
