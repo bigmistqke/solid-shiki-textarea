@@ -13,7 +13,7 @@ import {
   splitProps,
   type JSX,
 } from 'solid-js'
-import { calculateContrastingColor } from './utils/calculate-contrasting-color'
+import { hexToRgb, luminance } from './utils/colors'
 import { every, whenever } from './utils/conditionals'
 import { getTrailingNewlines } from './utils/get-trailing-newlines'
 
@@ -142,8 +142,11 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
       const { fg, bg } = highlighter.getTheme(theme)
+      const commentLuminance = luminance(...hexToRgb(bg))
+      const opacity = commentLuminance > 0.9 ? 0.1 : commentLuminance < 0.1 ? 0.25 : 0.175
+
       return {
-        '--selection-color': calculateContrastingColor(bg),
+        '--selection-color': `rgba(98, 114, 164, ${opacity})`,
         '--background-color': bg,
         '--foreground-color': fg,
       }
