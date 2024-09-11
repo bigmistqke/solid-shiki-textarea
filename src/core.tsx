@@ -128,17 +128,15 @@ export function createShikiTextarea(styles: Record<string, string>) {
     })
 
     let previous: string | undefined = undefined
-    const html = whenever(
-      every(lang, theme, highlighter, source),
-      ([[lang], theme, highlighter, source]) => {
-        const trailingNewlines = '<br/>'.repeat(getTrailingNewlines(source))
-        const html = highlighter.codeToHtml(source, {
-          lang: lang!.name,
-          theme: theme,
-        })
-        return (previous = html + trailingNewlines)
-      },
-    )
+    const html = whenever(every(lang, theme, highlighter), ([[lang], theme, highlighter]) => {
+      if (!source()) return '<br/>'
+      const trailingNewlines = '<br/>'.repeat(getTrailingNewlines(source()))
+      const html = highlighter.codeToHtml(source(), {
+        lang: lang!.name,
+        theme: theme,
+      })
+      return (previous = html + trailingNewlines)
+    })
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
       const { fg, bg } = highlighter.getTheme(theme)
