@@ -15,6 +15,7 @@ import {
 } from 'solid-js'
 import { calculateContrastingColor } from './utils/calculate-contrasting-color'
 import { every, whenever } from './utils/conditionals'
+import { getTrailingNewlines } from './utils/get-trailing-newlines'
 
 /**********************************************************************************/
 /*                                                                                */
@@ -130,10 +131,12 @@ export function createShikiTextarea(styles: Record<string, string>) {
     const html = whenever(
       every(lang, theme, highlighter, source),
       ([[lang], theme, highlighter, source]) => {
-        return (previous = highlighter.codeToHtml(source, {
+        const trailingNewlines = '<br/>'.repeat(getTrailingNewlines(source))
+        const html = highlighter.codeToHtml(source, {
           lang: lang!.name,
           theme: theme,
-        }))
+        })
+        return (previous = html + trailingNewlines)
       },
     )
 
