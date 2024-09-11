@@ -37,6 +37,8 @@
   }
 
   & code {
+    /* fixes color change when textarea is focused */
+    backface-visibility: hidden;
     font-size: inherit;
     line-height: inherit;
   }
