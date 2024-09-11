@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "vite serve dev",
     "build": "vite build",
-    "build-watch": "vite build && vite build --config vite.ce.config.ts --watch",
+    "build-watch": "vite build --watch",
     "build:dev": "vite build dev",
     "preview:dev": "vite preview dev",
     "prepublishOnly": "pnpm build",
