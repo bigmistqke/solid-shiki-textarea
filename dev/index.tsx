@@ -1,19 +1,20 @@
 import self from '.?raw'
-// import { BundledLanguage, bundledLanguages, BundledTheme, bundledThemes } from 'shiki'
-import { createSignal, For, Index, Show, type Component } from 'solid-js'
+import { createEffect, createSignal, For, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
 import 'solid-shiki-textarea/custom-element'
 import { Language, languages, Theme, themes } from 'solid-shiki-textarea/tm'
 import './index.css'
 
-const App: Component = () => {
-  const [value, setValue] = createSignal(
-    Array.from({ length: 10 })
-      .map(() => self)
-      .join('\n'),
-  )
+const sources = {
+  large: Array.from({ length: 10 })
+    .map(() => self)
+    .join('\n'),
+  small: `const sum = (a: number, b: number) => a + b`,
+}
+type Source = keyof typeof sources
 
+const App: Component = () => {
   // Config
   const [componentType, setComponentType] = createSignal<'custom-element' | 'solid'>('solid')
   const [currentThemeName, setCurrentThemeName] = createSignal<Theme>('aurora-x')
@@ -22,7 +23,12 @@ const App: Component = () => {
   const [fontSize, setFontSize] = createSignal(10)
   const [padding, setPadding] = createSignal(5)
   const [amount, setAmount] = createSignal(1)
+  const [sourceType, setSourceType] = createSignal<Source>('small')
   const [editable, setEditable] = createSignal(true)
+
+  const [value, setValue] = createSignal(sources[sourceType()])
+
+  createEffect(() => setValue(sources[sourceType()]))
 
   // Derived imports
   const theme = () =>
@@ -71,6 +77,16 @@ const App: Component = () => {
           </div>
           <br />
           <div>
+            <label for="source">source</label>
+            <select
+              id="source"
+              value={sourceType()}
+              onInput={e => setSourceType(e.currentTarget.value as Source)}
+            >
+              <For each={Object.keys(sources)}>{source => <option>{source}</option>}</For>
+            </select>
+          </div>
+          <div>
             <label for="padding">padding</label>
             <input
               id="padding"
@@ -112,40 +128,40 @@ const App: Component = () => {
       </div>
 
       <main>
-        <Index each={Array.from({ length: amount() }).fill('')}>
-          {() => (
-            <div class="shikies">
-              <Show
-                when={componentType() === 'custom-element'}
-                fallback={
-                  <ShikiTextarea
-                    editable={editable()}
-                    value={value()}
-                    lang={language()}
-                    theme={theme()}
-                    style={{
-                      'font-size': `${fontSize()}pt`,
-                      padding: `${padding()}px`,
-                    }}
-                    onInput={e => setValue(e.target.value)}
-                  />
-                }
-              >
-                <shiki-textarea
-                  editable={editable()}
-                  value={value()}
-                  style={{
-                    'font-size': `${fontSize()}pt`,
-                    padding: `${padding()}px`,
-                  }}
-                  lang={currentLanguageName()}
-                  theme={currentThemeName()}
-                  onInput={e => setValue(e.target.value)}
-                />
-              </Show>
-            </div>
-          )}
-        </Index>
+        <div style={{ resize: 'both', overflow: 'auto' }}>
+          <Show
+            when={componentType() === 'custom-element'}
+            fallback={
+              <ShikiTextarea
+                editable={editable()}
+                value={value()}
+                lang={language()}
+                theme={theme()}
+                style={{
+                  'font-size': `${fontSize()}pt`,
+                  padding: `${padding()}px`,
+                  'min-height': '100%',
+                  'min-width': '100%',
+                }}
+                onInput={e => setValue(e.target.value)}
+              />
+            }
+          >
+            <shiki-textarea
+              editable={editable()}
+              value={value()}
+              style={{
+                'font-size': `${fontSize()}pt`,
+                padding: `${padding()}px`,
+                'min-height': '100%',
+                'min-width': '100%',
+              }}
+              lang={currentLanguageName()}
+              theme={currentThemeName()}
+              onInput={e => setValue(e.target.value)}
+            />
+          </Show>
+        </div>
       </main>
     </div>
   )

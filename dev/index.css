@@ -89,9 +89,9 @@ main {
   align-items: center;
   gap: 15px 30px;
   box-sizing: border-box;
-  padding: 15px;
   height: 100vh;
   overflow: auto;
+  z-index: 1;
 }
 
 .shikiTextarea {
@@ -103,8 +103,8 @@ main {
 .shikies {
   display: flex;
   flex: 1;
-  overflow: auto;
-  box-sizing: border-box;
   flex-basis: 50%;
+  box-sizing: border-box;
   height: 100%;
+  overflow: auto;
 }
