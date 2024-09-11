@@ -10,14 +10,11 @@ import {
   createRenderEffect,
   createResource,
   createSignal,
-  onCleanup,
   splitProps,
   type JSX,
 } from 'solid-js'
 import { calculateContrastingColor } from './utils/calculate-contrasting-color'
 import { every, whenever } from './utils/conditionals'
-import { getLineCount } from './utils/get-line-count'
-import { getLineSize } from './utils/get-line-size'
 
 /**********************************************************************************/
 /*                                                                                */
@@ -110,13 +107,6 @@ export function createShikiTextarea(styles: Record<string, string>) {
       'editable',
     ])
     const [source, setSource] = createSignal(config.value)
-    const [characterDimensions, setCharacterDimensions] = createSignal<{
-      width: number
-      height: number
-    }>({
-      width: 0,
-      height: 0,
-    })
 
     const [theme] = createResource(() => config.theme, resolve)
     const [lang] = createResource(() => config.lang, resolve)
@@ -170,13 +160,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
         }}
         {...rest}
       >
-        <div
-          class={styles.container}
-          style={{
-            'min-width': `${Math.ceil(getLineSize(source()) * characterDimensions().width + 1)}px`,
-            'min-height': `${Math.ceil(getLineCount(source()) * characterDimensions().height)}px`,
-          }}
-        >
+        <div class={styles.container}>
           <code class={styles.code} innerHTML={html() || previous} />
           <textarea
             inputmode="none"
@@ -191,18 +175,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
             }}
             value={config.value}
           />
-          <code
-            ref={character => {
-              const resizeObserver = new ResizeObserver(([entry]) => {
-                setCharacterDimensions(entry!.contentRect)
-              })
-              resizeObserver.observe(character)
-              onCleanup(() => resizeObserver.disconnect())
-            }}
-            class={styles.character}
-            innerHTML="&nbsp;"
-            aria-hidden
-          />
+          <code class={styles.character} innerHTML="&nbsp;" aria-hidden />
         </div>
       </div>
     )
