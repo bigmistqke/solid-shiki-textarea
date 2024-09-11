@@ -97,6 +97,7 @@ class ShikiTextareaElement extends Element {
   @booleanAttribute editable = true
 
   template = () => {
+    // styles
     const adoptedStyleSheets = this.shadowRoot!.adoptedStyleSheets
 
     adoptedStyleSheets.push(ShikiTextareaStyleSheet)
@@ -105,6 +106,12 @@ class ShikiTextareaElement extends Element {
       adoptedStyleSheets.push(sheet(this.stylesheet))
     }
 
+    // copy event from shadowRoot to local instance
+    this.shadowRoot.addEventListener('input', e => {
+      this.value = this.shadowRoot.value
+    })
+
+    // theme
     const [theme] = createResource(
       () => this.theme,
       async theme => {
@@ -118,6 +125,8 @@ class ShikiTextareaElement extends Element {
         )
       },
     )
+
+    // lang
     const [lang] = createResource(
       () => this.lang,
       async lang => {

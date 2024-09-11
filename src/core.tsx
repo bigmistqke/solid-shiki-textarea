@@ -169,9 +169,20 @@ export function createShikiTextarea(styles: Record<string, string>) {
               spellcheck={false}
               class={styles.textarea}
               disabled={!config.editable}
-              onInput={e => {
-                const value = e.currentTarget.value
+              on:input={e => {
+                const target = e.currentTarget
+                const value = target.value
+
+                // local
                 setSource(value)
+
+                // copy to custom element document fragment
+                const rootNode = target.getRootNode()
+                if (rootNode && rootNode instanceof ShadowRoot) {
+                  rootNode.value = value
+                }
+
+                // user provided callback
                 config.onInput?.(e)
               }}
               value={config.value}
