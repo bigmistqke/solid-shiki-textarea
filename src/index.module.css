@@ -4,12 +4,15 @@
 
 .root {
   display: block;
+  background-color: var(--background-color);
   isolation: isolate;
   padding: inherit;
   padding-top: inherit;
   padding-right: inherit;
   padding-bottom: inherit;
   padding-left: inherit;
+  height: max-content;
+  caret-color: var(--foreground-color);
 }
 
 .editor,
@@ -22,23 +25,14 @@
 .editor {
   display: block;
   position: relative;
-
-  background-color: var(--background-color);
-
-  padding: var(--padding);
-  padding-top: var(--padding-top, var(--padding));
-  padding-right: var(--padding-right, var(--padding));
-  padding-bottom: var(--padding-bottom, var(--padding));
-  padding-left: var(--padding-left, var(--padding));
-  caret-color: var(--foreground-color);
-
   font-size: inherit;
 }
 
 .container {
   position: relative;
   flex: 1;
-  & code:not(.character) {
+
+  & code {
     display: block;
     position: relative;
     z-index: 1;
@@ -51,41 +45,32 @@
     margin: 0px;
     background: transparent !important;
   }
-}
 
-code {
-  font-size: inherit;
-  line-height: inherit;
-}
-.container .textarea {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  transition: color 0.5s;
-  outline: none;
-  border: none;
-  background: transparent;
-  padding: 0px;
-  overflow: hidden;
-  resize: none;
-  color: transparent;
-  font-size: inherit;
-  line-height: inherit;
-  font-family: monospace;
-  text-align: inherit;
-}
+  & code {
+    font-size: inherit;
+    line-height: inherit;
+  }
+  & .textarea {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    transition: color 0.5s;
+    outline: none;
+    border: none;
+    background: transparent;
+    padding: 0px;
+    overflow: hidden;
+    resize: none;
+    color: transparent;
+    font-size: inherit;
+    line-height: inherit;
+    font-family: monospace;
+    text-align: inherit;
+  }
 
-.container .textarea::selection {
-  background: var(--selection-color);
-}
-
-.container code.character {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  opacity: 0;
-  pointer-events: none;
-  font-size: inherit;
+  & .textarea::selection {
+    background: var(--selection-color);
+  }
 }
