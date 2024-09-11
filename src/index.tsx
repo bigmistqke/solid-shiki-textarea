@@ -11,7 +11,7 @@ import styles from './index.module.css'
  * return (
  *  <ShikiTextArea
  *    theme={andromeeda}
- *    lang={tsx}
+ *    language={tsx}
  *  />
  * )
  * ```
@@ -20,7 +20,7 @@ import styles from './index.module.css'
  * return (
  *  <ShikiTextArea
  *    theme={import('shiki/themes/andromeeda.mjs')}
- *    lang={import('shiki/langs/tsx.mjs')}
+ *    language={import('shiki/langs/tsx.mjs')}
  *  />
  * )
  * ```

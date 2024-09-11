@@ -28,8 +28,8 @@ The main export of `solid-shiki-textarea` is a solid component.
 ### Types
 
 ```ts
-interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' | 'lang'> {
-  lang:
+interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style'> {
+  language:
     | Promise<LanguageRegistration[]>
     | Promise<{ default: LanguageRegistration[] }>
     | LanguageRegistration[]
@@ -56,7 +56,7 @@ import tsx from 'shiki/langs/tsx.mjs'
 
 export default () => (
   <ShikiTextarea
-    lang={tsx}
+    language={tsx}
     theme={minLight}
     value="const sum = (a: string, b: string) => a + b"
     editable={true}
@@ -76,7 +76,7 @@ import { ShikiTextarea } from 'solid-shiki-textarea'
 
 export default () => (
   <ShikiTextarea
-    lang={import('https://esm.sh/shiki/langs/tsx.mjs')}
+    language={import('https://esm.sh/shiki/langs/tsx.mjs')}
     theme={import('https://esm.sh/shiki/themes/min-light.mjs')}
     value="const sum = (a: string, b: string) => a + b"
     editable={true}
@@ -98,7 +98,7 @@ We also export a custom-element wrapper `<shiki-textarea/>` powered by
 
 ```ts
 interface ShikiTextareaAttributes extends {
-  lang?: BundledLanguage
+  language?: BundledLanguage
   theme?: BundledTheme
   value?: string
   editable?: boolean
@@ -123,7 +123,7 @@ setCDN((type, id) => `./shiki/${type}/${id}.json`)
 
 export default () => (
   <shiki-textarea
-    lang="tsx"
+    language="tsx"
     theme="andromeeda"
     value="const sum = (a: string, b: string) => a + b"
     editable={true}

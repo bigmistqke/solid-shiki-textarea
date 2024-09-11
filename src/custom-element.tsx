@@ -90,7 +90,7 @@ const ShikiTextareaStyleSheet = sheet(css)
 
 @element('shiki-textarea')
 class ShikiTextareaElement extends Element {
-  @stringAttribute lang = 'tsx' as BundledLanguage
+  @stringAttribute language = 'tsx' as BundledLanguage
   @stringAttribute theme = 'andromeeda' as BundledTheme
   @stringAttribute value = ''
   @stringAttribute stylesheet = ''
@@ -128,7 +128,7 @@ class ShikiTextareaElement extends Element {
 
     // lang
     const [lang] = createResource(
-      () => this.lang,
+      () => this.language,
       async lang => {
         const url =
           typeof CDN === 'string' ? `${CDN}/tm-grammars/grammars/${lang}.json` : CDN('lang', lang)
@@ -144,7 +144,7 @@ class ShikiTextareaElement extends Element {
 
     return (
       <ShikiTextarea
-        lang={lang() as any}
+        language={lang() as any}
         theme={theme() as any}
         value={this.value}
         editable={this.editable}
