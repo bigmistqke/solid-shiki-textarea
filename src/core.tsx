@@ -151,14 +151,16 @@ export function createShikiTextarea(styles: Record<string, string>) {
     createRenderEffect(() => setSource(config.value))
 
     return (
-      <div
-        class={styles.root}
-        style={{
-          ...themeStyles(),
-          ...config.style,
-        }}
-      >
-        <div ref={props.ref} class={clsx(styles.editor, config.class)} {...rest}>
+      <div class="root">
+        <div
+          ref={props.ref}
+          class={clsx(styles.editor, config.class)}
+          style={{
+            ...themeStyles(),
+            ...config.style,
+          }}
+          {...rest}
+        >
           <div class={styles.container}>
             <code class={styles.code} innerHTML={html() || previous} />
             <textarea
@@ -174,6 +176,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
               }}
               value={config.value}
             />
+            <code class={styles.character} innerHTML="&nbsp;" aria-hidden />
           </div>
         </div>
       </div>
