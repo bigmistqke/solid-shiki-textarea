@@ -135,7 +135,7 @@ const App: Component = () => {
               <ShikiTextarea
                 editable={editable()}
                 value={value()}
-                lang={language()}
+                language={language()}
                 theme={theme()}
                 style={{
                   'font-size': `${fontSize()}pt`,
@@ -156,8 +156,8 @@ const App: Component = () => {
                 'min-height': '100%',
                 'min-width': '100%',
               }}
-              lang={currentLanguageName()}
-              theme={currentThemeName()}
+              language={language()}
+              theme={theme()}
               onInput={e => setValue(e.target.value)}
             />
           </Show>

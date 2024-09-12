@@ -110,7 +110,10 @@ interface ShikiTextareaAttributes extends {
 ### Usage
 
 ```tsx
+import { setCDN } from 'solid-shiki-textarea'
 import 'solid-shiki-textarea/custom-element'
+
+setCDN('/shiki')
 
 export default () => (
   <shiki-textarea
@@ -119,7 +122,7 @@ export default () => (
     value="const sum = (a: string, b: string) => a + b"
     editable={true}
     style={{
-      '--padding': '10px',
+      padding: '10px',
       'font-size': '16pt',
     }}
     onInput={e => console.log(e.target.value)}
@@ -174,9 +177,6 @@ different `shiki-textarea` instances.
 ```tsx
 // from solid component
 import { setCDN } from 'solid-shiki-textarea'
-
-// from custom element
-import { setCDN } from 'solid-shiki-textarea/custom-element'
 
 // Set base-url of CDN directly (defaults to https://esm.sh)
 setCDN('https://unpkg.com')
