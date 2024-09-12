@@ -1,3 +1,4 @@
+export { setCDN } from './core'
 import { createShikiTextarea } from './core'
 import styles from './index.module.css'
 
