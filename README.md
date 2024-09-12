@@ -148,6 +148,12 @@ shiki-textarea::part(root) {
 shiki-textarea::part(textarea)::selection {
   background: deepskyblue;
 }
+
+/* to size it to the container, will remove dead-zones */
+shiki-textarea {
+  min-height: 100%;
+  min-width: 100%;
+}
 ```
 
 The attribute `stylesheet` could be used as a last resort to customize the theme. In the following
