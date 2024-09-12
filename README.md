@@ -25,29 +25,38 @@ pnpm add shiki solid-shiki-textarea
 
 The main export of `solid-shiki-textarea` is a solid component.
 
-### Types
+<details>
+<summary>Prop Types</summary>
 
 ```ts
+import type { LanguageRegistration, ThemeRegistration } from 'shiki'
+import type { Language, Theme } from 'shiki-textarea/tm'
+
+type LanguageProps = 
+  | Language 
+  | LanguageRegistration[] 
+  | Promise<LanguageRegistration[]>
+
+type ThemeProps = 
+  | Theme 
+  | ThemeRegistration 
+  | Promise<ThemeRegistration>
+
 interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style'> {
-  language:
-    | Promise<LanguageRegistration[]>
-    | Promise<{ default: LanguageRegistration[] }>
-    | LanguageRegistration[]
-  theme:
-    | Promise<ThemeRegistrationRaw | ThemeRegistration>
-    | Promise<{ default: ThemeRegistrationRaw | ThemeRegistration }>
-    | ThemeRegistrationRaw
-    | ThemeRegistration
+  language: LanguageProps
+  theme: ThemeProps
   value: string
   editable?: boolean
-  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
   style?: JSX.CSSProperties
+  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
 }
 ```
 
+</details>
+
 ### Usage
 
-**Static import of `theme/lang`**
+**Static import of `theme/language`**
 
 ```tsx
 import { ShikiTextarea } from 'solid-shiki-textarea'
@@ -69,7 +78,7 @@ export default () => (
 )
 ```
 
-**Dynamic import of `theme/lang`**
+**Dynamic import of `theme/language`**
 
 ```tsx
 import { ShikiTextarea } from 'solid-shiki-textarea'
@@ -94,18 +103,23 @@ export default () => (
 We also export a custom-element wrapper `<shiki-textarea/>` powered by
 [@lume/element](https://github.com/lume/element)
 
-### Types
+<details>
+<summary>Attribute Types</summary>
 
 ```ts
-interface ShikiTextareaAttributes extends {
-  language?: BundledLanguage
-  theme?: BundledTheme
+import { LanguageProps, ThemeProps } from "shiki-textarea"
+
+interface ShikiTextareaAttributes extends ComponentProps<'div'> {
+  language?: LanguageProps
+  theme?: ThemeProps
   value?: string
   editable?: boolean
-  onInput?: (event:InputEvent & { target: HTMLTextAreaElement }) => void
   stylesheet?: string | CSSStyleSheet
+  onInput?: (event:InputEvent & { target: HTMLTextAreaElement }) => void
 }
 ```
+
+</details>
 
 ### Usage
 
@@ -125,8 +139,8 @@ export default () => (
       padding: '10px',
       'font-size': '16pt',
     }}
-    onInput={e => console.log(e.target.value)}
     stylesheet="code, code * { font-style:normal; }"
+    onInput={e => console.log(e.target.value)}
   />
 )
 ```
@@ -173,8 +187,8 @@ different `shiki-textarea` instances.
     '--padding': '10px',
     'font-size': '16pt',
   }}
-  onInput={e => console.log(e.target.value)}
   stylesheet="code, code * { font-style:normal; }"
+  onInput={e => console.log(e.target.value)}
 />
 ```
 
