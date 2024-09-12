@@ -143,7 +143,7 @@ const App: Component = () => {
                   'min-height': '100%',
                   'min-width': '100%',
                 }}
-                onInput={e => setValue(e.target.value)}
+                onInput={e => setValue(e.currentTarget.value)}
               />
             }
           >
@@ -158,7 +158,7 @@ const App: Component = () => {
               }}
               language={language()}
               theme={theme()}
-              onInput={e => setValue(e.target.value)}
+              onInput={e => setValue(e.currentTarget.value)}
             />
           </Show>
         </div>

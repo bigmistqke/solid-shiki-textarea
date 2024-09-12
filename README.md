@@ -48,7 +48,7 @@ interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style'> {
   value: string
   editable?: boolean
   style?: JSX.CSSProperties
-  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
+  onInput?: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void
 }
 ```
 
@@ -73,7 +73,7 @@ export default () => (
       padding: '10px',
       'font-size': '16pt',
     }}
-    onInput={e => console.log(e.target.value)}
+    onInput={e => console.log(e.currentTarget.value)}
   />
 )
 ```
@@ -93,7 +93,7 @@ export default () => (
       padding: '10px',
       'font-size': '16pt',
     }}
-    onInput={e => console.log(e.target.value)}
+    onInput={e => console.log(e.currentTarget.value)}
   />
 )
 ```
@@ -115,7 +115,7 @@ interface ShikiTextareaAttributes extends ComponentProps<'div'> {
   value?: string
   editable?: boolean
   stylesheet?: string | CSSStyleSheet
-  onInput?: (event:InputEvent & { target: HTMLTextAreaElement }) => void
+  onInput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => void
 }
 ```
 
@@ -140,7 +140,7 @@ export default () => (
       'font-size': '16pt',
     }}
     stylesheet="code, code * { font-style:normal; }"
-    onInput={e => console.log(e.target.value)}
+    onInput={e => console.log(e.currentTarget.value)}
   />
 )
 ```

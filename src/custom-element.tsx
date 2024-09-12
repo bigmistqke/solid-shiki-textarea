@@ -22,8 +22,8 @@ interface ShikiTextareaAttributes
     ElementAttributes<ShikiTextareaElement, 'language' | 'theme' | 'value' | 'editable'>,
     'onInput' | 'oninput'
   > {
-  oninput?: (event: InputEvent & { target: HTMLTextAreaElement }) => any
-  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => any
+  oninput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => any
+  onInput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => any
 }
 declare module 'solid-js/jsx-runtime' {
   namespace JSX {

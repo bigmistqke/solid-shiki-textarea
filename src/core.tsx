@@ -121,7 +121,7 @@ export interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' 
   /** The source code to be displayed and edited. */
   value: string
   /** Callback function to handle updates to the source code. */
-  onInput?: (event: InputEvent & { target: HTMLTextAreaElement }) => void
+  onInput?: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void
 }
 
 export function createShikiTextarea(styles: Record<string, string>) {
