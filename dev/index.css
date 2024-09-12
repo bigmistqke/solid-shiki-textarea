@@ -88,23 +88,14 @@ main {
   justify-content: center;
   align-items: center;
   gap: 15px 30px;
+  z-index: 1;
   box-sizing: border-box;
   height: 100vh;
   overflow: auto;
+}
+
+.resize-container {
   z-index: 1;
-}
-
-.shikiTextarea {
-  margin: 15px;
-  padding: 5px;
-  text-align: left;
-}
-
-.shikies {
-  display: flex;
-  flex: 1;
-  flex-basis: 50%;
-  box-sizing: border-box;
-  height: 100%;
   overflow: auto;
+  resize: both;
 }

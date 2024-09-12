@@ -105,15 +105,6 @@ const App: Component = () => {
             />
           </div>
           <div>
-            <label for="amount">amount</label>
-            <input
-              id="amount"
-              type="number"
-              onInput={e => setAmount(+e.currentTarget.value)}
-              value={amount()}
-            />
-          </div>
-          <div>
             <label for="editable">editable</label>
             <button
               id="editable"
@@ -128,7 +119,7 @@ const App: Component = () => {
       </div>
 
       <main>
-        <div style={{ resize: 'both', overflow: 'auto' }}>
+        <div class="resize-container">
           <Show
             when={componentType() === 'custom-element'}
             fallback={
