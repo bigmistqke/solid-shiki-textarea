@@ -32,20 +32,14 @@ The main export of `solid-shiki-textarea` is a solid component.
 import type { LanguageRegistration, ThemeRegistration } from 'shiki'
 import type { Language, Theme } from 'shiki-textarea/tm'
 
-type LanguageProps = 
-  | Language 
-  | LanguageRegistration[] 
-  | Promise<LanguageRegistration[]>
+type LanguageProps = Language | LanguageRegistration[] | Promise<LanguageRegistration[]>
 
-type ThemeProps = 
-  | Theme 
-  | ThemeRegistration 
-  | Promise<ThemeRegistration>
+type ThemeProps = Theme | ThemeRegistration | Promise<ThemeRegistration>
 
 interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style'> {
   language: LanguageProps
   theme: ThemeProps
-  value: string
+  code: string
   editable?: boolean
   style?: JSX.CSSProperties
   onInput?: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void
@@ -67,7 +61,7 @@ export default () => (
   <ShikiTextarea
     language={tsx}
     theme={minLight}
-    value="const sum = (a: string, b: string) => a + b"
+    code="const sum = (a: string, b: string) => a + b"
     editable={true}
     style={{
       padding: '10px',
@@ -87,7 +81,7 @@ export default () => (
   <ShikiTextarea
     language={import('https://esm.sh/shiki/langs/tsx.mjs')}
     theme={import('https://esm.sh/shiki/themes/min-light.mjs')}
-    value="const sum = (a: string, b: string) => a + b"
+    code="const sum = (a: string, b: string) => a + b"
     editable={true}
     style={{
       padding: '10px',
@@ -107,12 +101,12 @@ We also export a custom-element wrapper `<shiki-textarea/>` powered by
 <summary>Attribute Types</summary>
 
 ```ts
-import { LanguageProps, ThemeProps } from "shiki-textarea"
+import { LanguageProps, ThemeProps } from 'shiki-textarea'
 
 interface ShikiTextareaAttributes extends ComponentProps<'div'> {
   language?: LanguageProps
   theme?: ThemeProps
-  value?: string
+  code?: string
   editable?: boolean
   stylesheet?: string | CSSStyleSheet
   onInput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => void
@@ -133,7 +127,7 @@ export default () => (
   <shiki-textarea
     language="tsx"
     theme="andromeeda"
-    value="const sum = (a: string, b: string) => a + b"
+    code="const sum = (a: string, b: string) => a + b"
     editable={true}
     style={{
       padding: '10px',
@@ -181,7 +175,7 @@ different `shiki-textarea` instances.
 <shiki-textarea
   language="tsx"
   theme="andromeeda"
-  value="const sum = (a: string, b: string) => a + b"
+  code="const sum = (a: string, b: string) => a + b"
   editable={true}
   style={{
     '--padding': '10px',

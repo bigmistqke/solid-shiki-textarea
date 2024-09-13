@@ -127,7 +127,7 @@ export interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' 
    */
   theme: ThemeProp
   /** The source code to be displayed and edited. */
-  value: string
+  code: string
   /** Callback function to handle updates to the source code. */
   onInput?: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void
 }
@@ -138,12 +138,12 @@ export function createShikiTextarea(styles: Record<string, string>) {
       'class',
       'language',
       'onInput',
-      'value',
+      'code',
       'style',
       'theme',
       'editable',
     ])
-    const [source, setSource] = createSignal(config.value)
+    const [source, setSource] = createSignal(config.code)
 
     // lang
     const [language] = createResource(
@@ -219,7 +219,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     // NOTE:  Update to projection once this lands in solid 2.0
     //        Sync local source signal with config.source
-    createRenderEffect(() => setSource(config.value))
+    createRenderEffect(() => setSource(config.code))
 
     return (
       <div
@@ -247,16 +247,10 @@ export function createShikiTextarea(styles: Record<string, string>) {
               // local
               setSource(value)
 
-              // copy to custom element document fragment
-              const rootNode = target.getRootNode()
-              if (rootNode && rootNode instanceof ShadowRoot) {
-                rootNode.value = value
-              }
-
               // user provided callback
               config.onInput?.(e)
             }}
-            value={config.value}
+            value={config.code}
           />
         </div>
       </div>

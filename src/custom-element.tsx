@@ -6,6 +6,8 @@ import {
   ElementAttributes,
   stringAttribute,
 } from '@lume/element'
+import type { LumeElement } from '@lume'
+
 import { createShikiTextarea, LanguageProp, ThemeProp } from './core'
 import classnames from './index.module.css?classnames'
 import css from './index.module.css?raw'
@@ -19,7 +21,7 @@ import { sheet } from './utils/sheet.js'
 
 interface ShikiTextareaAttributes
   extends Omit<
-    ElementAttributes<ShikiTextareaElement, 'language' | 'theme' | 'value' | 'editable'>,
+    ElementAttributes<ShikiTextareaElement, 'language' | 'theme' | 'code' | 'editable'>,
     'onInput' | 'oninput'
   > {
   oninput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => any
@@ -55,33 +57,36 @@ const ShikiTextareaStyleSheet = sheet(css)
 class ShikiTextareaElement extends Element {
   @attribute() language: LanguageProp = 'tsx'
   @attribute() theme: ThemeProp = 'andromeeda'
-  @stringAttribute value = ''
+  @stringAttribute code = ''
   @stringAttribute stylesheet = ''
   @booleanAttribute editable = true
+  input: LumeElement = null
 
   template = () => {
-    // styles
     const adoptedStyleSheets = this.shadowRoot!.adoptedStyleSheets
 
+    // local component stylesheet
     adoptedStyleSheets.push(ShikiTextareaStyleSheet)
 
+    // user provided stylesheet
     if (this.stylesheet) {
       adoptedStyleSheets.push(sheet(this.stylesheet))
     }
 
-    // copy event from shadowRoot to local instance
-    this.shadowRoot.addEventListener('input', e => {
-      this.value = this.shadowRoot.value
-    })
-
-    return (
+    const node: LumeElement = (
       <ShikiTextarea
         language={this.language}
         theme={this.theme}
-        value={this.value}
+        code={this.code}
         editable={this.editable}
       />
     )
+    this.input = node.querySelector('textarea')
+
+    return node
+  }
+  get value() {
+    return this.input.value
   }
 }
 
