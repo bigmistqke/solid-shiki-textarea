@@ -77,6 +77,14 @@ export function urlFromCdn(type: 'theme' | 'language', key: string) {
 /*                                                                                */
 /**********************************************************************************/
 
+declare module 'solid-js/jsx-runtime' {
+  namespace JSX {
+    interface CustomEvents {
+      input: InputEvent
+    }
+  }
+}
+
 export type LanguageProp = Language | Promise<LanguageRegistration[]> | LanguageRegistration[]
 
 export type ThemeProp =
