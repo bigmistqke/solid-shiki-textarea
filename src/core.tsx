@@ -230,6 +230,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
           ...config.style,
         }}
         {...rest}
+        data-editable={config.editable}
       >
         <div class={styles.container}>
           <code part="code" class={styles.code} innerHTML={html() || previous} />
