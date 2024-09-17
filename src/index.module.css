@@ -41,6 +41,7 @@
   & pre {
     margin: 0px;
     background: transparent !important;
+    min-height: 1em;
   }
 
   & code {

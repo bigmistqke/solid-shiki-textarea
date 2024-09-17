@@ -199,14 +199,11 @@ export function createShikiTextarea(styles: Record<string, string>) {
 
     let previous: ChildNode | null = null
     const html = whenever(every(language, theme, highlighter), ([[lang], theme, highlighter]) => {
-      if (!source()) return '<br/>'
-      const trailingNewlines = '<br/>'.repeat(getTrailingNewlines(source()))
       const html = highlighter.codeToHtml(source(), {
         lang: lang!.name,
         theme: theme,
       })
-      return (previous = Document.parseHTMLUnsafe(html + trailingNewlines).body.firstChild!
-        .firstChild)
+      return (previous = Document.parseHTMLUnsafe(html).body.firstChild!.firstChild)
     })
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
@@ -239,6 +236,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
         <div class={styles.container}>
           <pre part="code" class={styles.code}>
             {html() || previous}
+            {`\n`.repeat(getTrailingNewlines(source()))}
           </pre>
           <textarea
             ref={props.textareaRef}
