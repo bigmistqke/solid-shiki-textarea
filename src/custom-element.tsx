@@ -6,7 +6,7 @@ import {
   ElementAttributes,
   stringAttribute,
 } from '@lume/element'
-import type { LumeElement } from '@lume'
+import { signal } from 'classy-solid'
 
 import { createShikiTextarea, LanguageProp, ThemeProp } from './core'
 import classnames from './index.module.css?classnames'
@@ -57,10 +57,12 @@ const ShikiTextareaStyleSheet = sheet(css)
 class ShikiTextareaElement extends Element {
   @attribute() language: LanguageProp = 'tsx'
   @attribute() theme: ThemeProp = 'andromeeda'
-  @stringAttribute code = ''
   @stringAttribute stylesheet = ''
   @booleanAttribute editable = true
-  input: LumeElement = null
+
+  @signal private _value = ''
+
+  textarea: HTMLTextAreaElement = null!
 
   template = () => {
     const adoptedStyleSheets = this.shadowRoot!.adoptedStyleSheets
@@ -73,20 +75,23 @@ class ShikiTextareaElement extends Element {
       adoptedStyleSheets.push(sheet(this.stylesheet))
     }
 
-    const node: LumeElement = (
+    return (
       <ShikiTextarea
         language={this.language}
         theme={this.theme}
-        code={this.code}
+        code={this._value}
         editable={this.editable}
+        textareaRef={textarea => (this.textarea = textarea)}
       />
     )
-    this.input = node.querySelector('textarea')
-
-    return node
   }
+
   get value() {
-    return this.input.value
+    return this.textarea.value
+  }
+
+  set value(value) {
+    this._value = value
   }
 }
 

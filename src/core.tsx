@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import {
+  getHighlighterCore,
   LanguageRegistration,
   ThemeRegistration,
   ThemeRegistrationRaw,
-  getHighlighterCore,
 } from 'shiki'
 import {
   ComponentProps,
@@ -11,6 +11,7 @@ import {
   createResource,
   createSignal,
   onCleanup,
+  Ref,
   splitProps,
   type JSX,
 } from 'solid-js'
@@ -112,6 +113,8 @@ export interface ShikiTextareaProps extends Omit<ComponentProps<'div'>, 'style' 
   language: LanguageProp
   /** Custom CSS properties to apply to the editor. */
   style?: JSX.CSSProperties
+  /** Ref to the internal html-textarea-element. */
+  textareaRef?: Ref<HTMLTextAreaElement>
   /**
    * The theme to apply for syntax highlighting.
    *
@@ -235,6 +238,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
         <div class={styles.container}>
           <code part="code" class={styles.code} innerHTML={html() || previous} />
           <textarea
+            ref={props.textareaRef}
             part="textarea"
             inputmode="none"
             autocomplete="off"

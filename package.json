@@ -56,6 +56,7 @@
   },
   "dependencies": {
     "@lume/element": "^0.12.0",
+    "classy-solid": "^0.3.8",
     "clsx": "^2.1.1"
   },
   "peerDependencies": {

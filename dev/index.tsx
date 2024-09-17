@@ -125,7 +125,7 @@ const App: Component = () => {
             fallback={
               <ShikiTextarea
                 editable={editable()}
-                value={value()}
+                code={value()}
                 language={language()}
                 theme={theme()}
                 style={{

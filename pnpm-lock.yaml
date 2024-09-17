@@ -11,6 +11,9 @@ importers:
       '@lume/element':
         specifier: ^0.12.0
         version: 0.12.0(@babel/core@7.25.2)(@types/react@18.3.5)
+      classy-solid:
+        specifier: ^0.3.8
+        version: 0.3.8
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1268,8 +1271,8 @@ packages:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
 
-  classy-solid@0.3.7:
-    resolution: {integrity: sha512-0faSW+AQG6OSRm2s3JW6jH2Ti25Wjc9JBB3+Ka0PmUX0JGBSuiWSyRI0Vt4GVja+xCrsXwaJyQjgQZj62lDYfw==}
+  classy-solid@0.3.8:
+    resolution: {integrity: sha512-xKEpJkKsaBmecdfKoiCD1eIAcFhIsc0BhmkmaVwB2889kWcNk/cTtBXXiPCPhNLSnAdw6icn0Qcmx8MVVNGyUg==}
 
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
@@ -1822,6 +1825,9 @@ packages:
 
   lowclass@7.0.1:
     resolution: {integrity: sha512-MUCYry/VsWP3jfShf0TUyQ9tnmo6qsNUGnxbRo02GHtnyz1pq12ZlI7ep+H1s+FqpoDgA/TVrGqSScrvYhaWAQ==}
+
+  lowclass@8.0.0:
+    resolution: {integrity: sha512-ewnwmQN4yJx0qgQT64/nNKws1/ITiVn0/fScxaJvJWTplrcwVeK+tNV7ZlL2dMUjbig5TfAEmEWlcmJcLDedNA==}
 
   lru-cache@10.2.2:
     resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
@@ -3231,7 +3237,7 @@ snapshots:
     dependencies:
       '@types/react': 18.3.5
       babel-preset-solid: 1.8.17(@babel/core@7.25.2)
-      classy-solid: 0.3.7
+      classy-solid: 0.3.8
       lowclass: 7.0.1
       solid-js: 1.8.17
     transitivePeerDependencies:
@@ -3865,9 +3871,9 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  classy-solid@0.3.7:
+  classy-solid@0.3.8:
     dependencies:
-      lowclass: 7.0.1
+      lowclass: 8.0.0
       solid-js: 1.8.17
 
   cliui@8.0.1:
@@ -4474,6 +4480,8 @@ snapshots:
       get-func-name: 2.0.2
 
   lowclass@7.0.1: {}
+
+  lowclass@8.0.0: {}
 
   lru-cache@10.2.2: {}
 
