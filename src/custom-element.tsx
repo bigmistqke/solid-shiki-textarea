@@ -21,11 +21,12 @@ import { sheet } from './utils/sheet.js'
 
 interface ShikiTextareaAttributes
   extends Omit<
-    ElementAttributes<ShikiTextareaElement, 'language' | 'theme' | 'code' | 'editable'>,
+    ElementAttributes<ShikiTextareaElement, 'language' | 'theme' | 'editable'>,
     'onInput' | 'oninput'
   > {
   oninput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => any
   onInput?: (event: InputEvent & { currentTarget: ShikiTextareaElement }) => any
+  value: string
 }
 declare module 'solid-js/jsx-runtime' {
   namespace JSX {
@@ -74,6 +75,8 @@ class ShikiTextareaElement extends Element {
     if (this.stylesheet) {
       adoptedStyleSheets.push(sheet(this.stylesheet))
     }
+
+    this.createEffect(() => console.log(this.language))
 
     return (
       <ShikiTextarea
