@@ -197,7 +197,7 @@ export function createShikiTextarea(styles: Record<string, string>) {
       return highlighter
     })
 
-    let previous: string | undefined = undefined
+    let previous: ChildNode | null = null
     const html = whenever(every(language, theme, highlighter), ([[lang], theme, highlighter]) => {
       if (!source()) return '<br/>'
       const trailingNewlines = '<br/>'.repeat(getTrailingNewlines(source()))
@@ -205,7 +205,8 @@ export function createShikiTextarea(styles: Record<string, string>) {
         lang: lang!.name,
         theme: theme,
       })
-      return (previous = html + trailingNewlines)
+      return (previous = Document.parseHTMLUnsafe(html + trailingNewlines).body.firstChild!
+        .firstChild)
     })
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
@@ -236,7 +237,9 @@ export function createShikiTextarea(styles: Record<string, string>) {
         data-editable={config.editable}
       >
         <div class={styles.container}>
-          <code part="code" class={styles.code} innerHTML={html() || previous} />
+          <pre part="code" class={styles.code}>
+            {html() || previous}
+          </pre>
           <textarea
             ref={props.textareaRef}
             part="textarea"
