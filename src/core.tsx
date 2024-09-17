@@ -198,13 +198,16 @@ export function createShikiTextarea(styles: Record<string, string>) {
     })
 
     let previous: ChildNode | null = null
-    const html = whenever(every(language, theme, highlighter), ([[lang], theme, highlighter]) => {
-      const html = highlighter.codeToHtml(source(), {
-        lang: lang!.name,
-        theme: theme,
-      })
-      return (previous = Document.parseHTMLUnsafe(html).body.firstChild!.firstChild)
-    })
+    const html = whenever(
+      every(language, theme, highlighter, () => !highlighter.loading),
+      ([[lang], theme, highlighter]) => {
+        const html = highlighter.codeToHtml(source(), {
+          lang: lang!.name,
+          theme: theme,
+        })
+        return (previous = Document.parseHTMLUnsafe(html).body.firstChild!.firstChild)
+      },
+    )
 
     const themeStyles = whenever(every(theme, highlighter), ([theme, highlighter]) => {
       const { fg, bg } = highlighter.getTheme(theme)
