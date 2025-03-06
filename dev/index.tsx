@@ -3,6 +3,7 @@ import { createEffect, createSignal, For, Show, type Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { ShikiTextarea } from 'solid-shiki-textarea'
 import 'solid-shiki-textarea/custom-element'
+import type { ShikiTextareaElement } from 'solid-shiki-textarea/custom-element'
 import { Language, languages, Theme, themes } from 'solid-shiki-textarea/tm'
 import './index.css'
 
@@ -38,10 +39,12 @@ const App: Component = () => {
       .then(value => value.json())
       .then(value => [value])
 
+  const [textareaEl, setTextareaEl] = createSignal<ShikiTextareaElement>()
+
   return (
     <div class="app">
       <div class="side-panel">
-        <h1>Solid Shiki Textarea</h1>
+        <h1>Solid Shiki Textarea {textareaEl()?.loading && '(Loading...)'}</h1>
         <footer>
           <div>
             <label for="mode">mode</label>
@@ -139,6 +142,7 @@ const App: Component = () => {
             }
           >
             <shiki-textarea
+              ref={setTextareaEl}
               editable={editable()}
               value={value()}
               style={{
@@ -147,9 +151,9 @@ const App: Component = () => {
                 'min-height': '100%',
                 'min-width': '100%',
               }}
-              language={language()}
-              theme={theme()}
-              onInput={e => setValue(e.currentTarget.value)}
+              language={currentLanguageName()}
+              theme={currentThemeName()}
+              oninput={e => setValue(e.currentTarget.value)}
             />
           </Show>
         </div>
